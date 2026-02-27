@@ -1,0 +1,2363 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Do Papel à Execução — Portal</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   TOKENS — DARK (default)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+:root{
+  --bg:#0B0E13;--surf:#12161E;--card:#181D28;--card2:#1E2535;
+  --b1:#222A3A;--b2:#2C3650;--b3:#38466A;
+  --tx:#E4E7F0;--tx2:#9BA5C0;--tx3:#616D8A;
+  --gold:#C9903A;--gold2:#E5AE52;--goldbg:rgba(201,144,58,.1);--goldbr:rgba(201,144,58,.25);
+  --blue:#3A7ED4;--bluebg:rgba(58,126,212,.1);--bluebr:rgba(58,126,212,.25);
+  --green:#38A86E;--greenbg:rgba(56,168,110,.1);--greenbr:rgba(56,168,110,.25);
+  --red:#CC4848;--redbg:rgba(204,72,72,.1);--redbr:rgba(204,72,72,.25);
+  --amber:#D4874A;--amberbg:rgba(212,135,74,.1);
+  --panic:#E05252;--panicbg:rgba(224,82,82,.12);
+  --r:10px;--r2:7px;--r3:5px;
+  --sidebar:272px;
+  --theme-icon:'🌙';
+}
+
+/* ━━ LIGHT THEME ━━ */
+body.light{
+  --bg:#F4F1EC;--surf:#FDFAF5;--card:#F0EDE6;--card2:#E8E4DB;
+  --b1:#DDD8CE;--b2:#C9C3B6;--b3:#B0A998;
+  --tx:#1A1710;--tx2:#4A4538;--tx3:#8A8070;
+  --goldbg:rgba(180,120,20,.08);--goldbr:rgba(180,120,20,.2);
+  --bluebg:rgba(30,100,200,.07);--bluebr:rgba(30,100,200,.18);
+  --greenbg:rgba(40,140,80,.07);--greenbr:rgba(40,140,80,.18);
+  --redbg:rgba(180,50,50,.07);--redbr:rgba(180,50,50,.18);
+  --panicbg:rgba(200,60,60,.08);
+  --theme-icon:'☀️';
+}
+
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--tx);min-height:100vh;overflow-x:hidden;transition:background .3s,color .3s;}
+::-webkit-scrollbar{width:5px;height:5px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--b2);border-radius:3px;}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   SCREENS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.screen{display:none;min-height:100vh;}
+.screen.on{display:flex;}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   AUTH SCREEN
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+#scAuth{align-items:center;justify-content:center;position:relative;overflow:hidden;}
+.auth-bg{position:absolute;inset:0;
+  background:radial-gradient(ellipse 70% 60% at 15% 50%,rgba(201,144,58,.07) 0%,transparent 60%),
+             radial-gradient(ellipse 60% 70% at 85% 30%,rgba(58,126,212,.06) 0%,transparent 60%);}
+.auth-dots{position:absolute;inset:0;
+  background-image:radial-gradient(circle,rgba(255,255,255,.035) 1px,transparent 1px);
+  background-size:28px 28px;}
+body.light .auth-dots{background-image:radial-gradient(circle,rgba(0,0,0,.04) 1px,transparent 1px);}
+.auth-box{position:relative;z-index:2;display:flex;width:900px;max-width:96vw;
+  background:var(--surf);border:1px solid var(--b1);border-radius:18px;
+  overflow:hidden;box-shadow:0 48px 120px rgba(0,0,0,.55);}
+.auth-theme-btn{position:absolute;top:18px;right:18px;z-index:10;
+  background:var(--card);border:1px solid var(--b1);border-radius:var(--r3);
+  padding:6px 10px;font-size:16px;cursor:pointer;transition:all .2s;}
+.auth-theme-btn:hover{border-color:var(--gold);}
+
+/* left panel */
+.auth-panel{width:300px;flex-shrink:0;background:linear-gradient(155deg,#0D1520 0%,#090D14 100%);
+  padding:48px 36px;display:flex;flex-direction:column;justify-content:space-between;
+  border-right:1px solid var(--b1);position:relative;overflow:hidden;}
+body.light .auth-panel{background:linear-gradient(155deg,#2A2318 0%,#1A1610 100%);}
+.auth-panel::after{content:'';position:absolute;bottom:-60px;right:-60px;width:220px;height:220px;
+  border-radius:50%;background:radial-gradient(circle,rgba(201,144,58,.1) 0%,transparent 70%);}
+.ap-tag{font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:10px;}
+.ap-title{font-family:'Cormorant Garamond',serif;font-size:30px;font-weight:700;color:#E4E7F0;line-height:1.2;}
+.ap-sub{font-size:13px;color:#616D8A;margin-top:8px;line-height:1.65;}
+.ap-feat{display:flex;flex-direction:column;gap:12px;}
+.ap-feat-row{display:flex;align-items:flex-start;gap:10px;}
+.ap-feat-dot{width:5px;height:5px;border-radius:50%;background:var(--gold);flex-shrink:0;margin-top:6px;}
+.ap-feat-txt{font-size:12.5px;color:#9BA5C0;line-height:1.55;}
+.ap-feat-txt strong{color:#E4E7F0;font-weight:500;}
+
+/* right form area */
+.auth-forms{flex:1;padding:48px 44px;overflow-y:auto;max-height:92vh;}
+.auth-tabs{display:flex;background:var(--card);border-radius:var(--r);padding:4px;margin-bottom:28px;}
+.auth-tab{flex:1;padding:9px;text-align:center;font-size:13px;font-weight:500;color:var(--tx3);
+  cursor:pointer;border-radius:8px;transition:all .2s;border:none;background:transparent;
+  font-family:'Outfit',sans-serif;}
+.auth-tab.on{background:var(--b2);color:var(--tx);}
+.auth-form{display:none;}
+.auth-form.on{display:block;}
+.auth-h{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:600;color:var(--tx);margin-bottom:5px;}
+.auth-desc{font-size:13px;color:var(--tx3);margin-bottom:22px;line-height:1.6;}
+.fld{margin-bottom:14px;}
+.flbl{display:block;font-size:11px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;
+  color:var(--tx2);margin-bottom:7px;}
+.finp{width:100%;background:var(--card);border:1.5px solid var(--b2);border-radius:var(--r2);
+  padding:11px 15px;font-family:'Outfit',sans-serif;font-size:14px;color:var(--tx);
+  outline:none;transition:border-color .2s,box-shadow .2s;}
+.finp:focus{border-color:var(--gold);box-shadow:0 0 0 3px var(--goldbg);}
+.finp::placeholder{color:var(--tx3);}
+.btn-auth{width:100%;padding:13px;background:var(--gold);color:#0B0E13;border:none;
+  border-radius:var(--r2);font-family:'Outfit',sans-serif;font-size:14px;font-weight:700;
+  cursor:pointer;transition:all .2s;letter-spacing:.02em;}
+.btn-auth:hover{background:var(--gold2);transform:translateY(-1px);box-shadow:0 8px 24px rgba(201,144,58,.3);}
+.auth-msg{margin-top:10px;font-size:12.5px;text-align:center;min-height:16px;
+  padding:7px 10px;border-radius:var(--r3);}
+.auth-msg.err{color:var(--red);background:var(--redbg);}
+.auth-msg.ok{color:var(--green);background:var(--greenbg);}
+.auth-link{display:inline-block;margin-top:10px;font-size:12px;color:var(--tx3);cursor:pointer;
+  text-decoration:underline;text-align:center;width:100%;}
+.auth-link:hover{color:var(--gold);}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   STUDENT APP
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+#scApp{flex-direction:row;}
+
+/* SIDEBAR */
+.sb{width:var(--sidebar);flex-shrink:0;background:var(--surf);border-right:1px solid var(--b1);
+  position:fixed;top:0;left:0;bottom:0;display:flex;flex-direction:column;z-index:200;overflow:hidden;}
+.sb-head{padding:24px 22px 18px;border-bottom:1px solid var(--b1);}
+.sb-tag{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:7px;}
+.sb-logo{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:700;color:var(--tx);line-height:1.25;}
+.sb-user{margin:14px 14px 0;padding:12px 14px;background:var(--card);border-radius:var(--r);border:1px solid var(--b1);}
+.sb-ulbl{font-size:9.5px;text-transform:uppercase;letter-spacing:.1em;color:var(--tx3);margin-bottom:3px;}
+.sb-uname{font-size:13.5px;font-weight:600;color:var(--tx);}
+.sb-prog{margin:12px 14px 0;padding:12px 14px;background:var(--card);border-radius:var(--r);border:1px solid var(--b1);}
+.sb-prog-row{display:flex;justify-content:space-between;font-size:11px;color:var(--tx3);margin-bottom:7px;}
+.sb-prog-row span:last-child{color:var(--gold);font-weight:600;}
+.sb-bar{height:3px;background:var(--b2);border-radius:2px;overflow:hidden;}
+.sb-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--gold2));border-radius:2px;transition:width .5s ease;}
+.sb-nav{flex:1;overflow-y:auto;padding:10px 0;}
+.sb-sec{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--tx3);padding:14px 22px 5px;}
+.sb-link{display:flex;align-items:center;gap:9px;padding:9px 14px 9px 22px;font-size:13px;
+  color:var(--tx2);cursor:pointer;border-left:2px solid transparent;transition:all .15s;user-select:none;}
+.sb-link:hover{color:var(--tx);background:rgba(255,255,255,.03);}
+body.light .sb-link:hover{background:rgba(0,0,0,.03);}
+.sb-link.on{color:var(--gold);border-left-color:var(--gold);background:var(--goldbg);font-weight:500;}
+.sb-link.done{color:var(--green);}
+.sb-link.done .sb-dot{background:var(--green);}
+.sb-dot{width:6px;height:6px;border-radius:50%;background:var(--b2);flex-shrink:0;transition:background .2s;}
+.sb-link.on .sb-dot{background:var(--gold);}
+/* badge for unread messages */
+.sb-badge{background:var(--red);color:#fff;font-size:9px;font-weight:700;padding:1px 6px;
+  border-radius:10px;margin-left:auto;font-family:'JetBrains Mono',monospace;}
+.sb-foot{padding:14px 22px;border-top:1px solid var(--b1);display:flex;align-items:center;justify-content:space-between;gap:6px;}
+.sb-foot-txt{font-size:10.5px;color:var(--tx3);font-family:'JetBrains Mono',monospace;}
+.btn-logout{background:transparent;border:1px solid var(--b2);color:var(--tx3);padding:5px 10px;
+  border-radius:var(--r3);font-size:11px;cursor:pointer;font-family:'Outfit',sans-serif;transition:all .15s;}
+.btn-logout:hover{border-color:var(--red);color:var(--red);}
+
+/* MAIN */
+.main{margin-left:var(--sidebar);flex:1;display:flex;flex-direction:column;min-height:100vh;}
+.topbar{background:var(--surf);border-bottom:1px solid var(--b1);padding:0 44px;height:57px;
+  display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
+.tb-left{display:flex;align-items:center;gap:11px;}
+.tb-badge{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--gold);background:var(--goldbg);border:1px solid var(--goldbr);padding:4px 10px;border-radius:4px;}
+.tb-title{font-size:14px;font-weight:500;color:var(--tx);}
+.tb-right{display:flex;gap:7px;align-items:center;}
+
+/* Theme toggle button */
+.btn-theme{background:var(--card);border:1px solid var(--b1);border-radius:var(--r2);
+  padding:6px 10px;font-size:15px;cursor:pointer;transition:all .2s;line-height:1;}
+.btn-theme:hover{border-color:var(--gold);}
+
+/* Buttons */
+.btn{display:inline-flex;align-items:center;gap:5px;padding:7px 14px;border-radius:var(--r2);
+  font-family:'Outfit',sans-serif;font-size:12.5px;font-weight:500;cursor:pointer;
+  transition:all .18s;border:none;white-space:nowrap;}
+.btn-ghost{background:transparent;border:1px solid var(--b2);color:var(--tx2);}
+.btn-ghost:hover{border-color:var(--tx);color:var(--tx);}
+.btn-red{background:transparent;border:1px solid var(--b2);color:var(--tx2);}
+.btn-red:hover{border-color:var(--red);color:var(--red);background:var(--redbg);}
+.btn-gold{background:var(--gold);color:#0B0E13;font-weight:700;}
+.btn-gold:hover{background:var(--gold2);box-shadow:0 4px 16px rgba(201,144,58,.3);}
+.btn-gold.saved{background:var(--green);color:#fff;}
+.btn-blue{background:var(--bluebg);border:1px solid var(--bluebr);color:var(--blue);}
+.btn-blue:hover{background:var(--blue);color:#fff;}
+.btn-green{background:var(--greenbg);border:1px solid var(--greenbr);color:var(--green);}
+.btn-green:hover{background:var(--green);color:#fff;}
+
+/* CONTENT */
+.content{padding:40px 44px 100px;max-width:860px;}
+.page{display:none;}
+.page.on{display:block;animation:fu .3s ease;}
+@keyframes fu{from{opacity:0;transform:translateY(9px);}to{opacity:1;transform:translateY(0);}}
+
+/* page header */
+.pg-eye{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:9px;}
+.pg-h1{font-family:'Cormorant Garamond',serif;font-size:38px;font-weight:700;color:var(--tx);
+  line-height:1.15;margin-bottom:10px;}
+.pg-sub{font-size:14.5px;color:var(--tx2);line-height:1.65;max-width:560px;margin-bottom:32px;}
+.hr{height:1px;background:var(--b1);margin:32px 0;}
+.sec-h{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600;color:var(--tx);margin-bottom:16px;}
+
+/* session bar */
+.sess-bar{display:flex;align-items:center;gap:8px;padding:13px 18px;background:var(--card);
+  border:1px solid var(--b1);border-radius:var(--r);margin-bottom:28px;}
+.sess-bar-lbl{flex:1;font-size:12.5px;color:var(--tx3);}
+.sess-bar-lbl strong{color:var(--tx2);}
+
+/* question block */
+.qb{background:var(--card);border:1px solid var(--b1);border-radius:var(--r);
+  padding:18px 20px;margin-bottom:12px;transition:border-color .2s;}
+.qb:focus-within{border-color:var(--b2);}
+.qb.star{border-color:var(--goldbr);background:rgba(201,144,58,.04);}
+.qnum{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;color:var(--gold);margin-bottom:5px;}
+.qb.star .qnum{color:var(--gold2);}
+.qtxt{font-size:15px;font-weight:500;color:var(--tx);margin-bottom:8px;line-height:1.45;}
+.qnote{font-size:12px;color:var(--tx3);font-style:italic;margin-bottom:10px;
+  padding-left:10px;border-left:2px solid var(--b2);}
+.qans{width:100%;background:rgba(255,255,255,.03);border:1.5px solid var(--b2);border-radius:var(--r3);
+  padding:10px 13px;font-family:'Outfit',sans-serif;font-size:14px;color:var(--tx);
+  line-height:1.6;outline:none;resize:vertical;min-height:68px;transition:border-color .2s;}
+body.light .qans{background:rgba(0,0,0,.02);}
+.qans:focus{border-color:var(--gold);}
+.qans::placeholder{color:var(--tx3);font-style:italic;}
+
+/* field */
+.field{margin-bottom:20px;}
+.flabel{font-size:11px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;
+  color:var(--tx2);margin-bottom:7px;display:flex;align-items:center;gap:7px;}
+.ftag{font-size:10px;background:var(--goldbg);color:var(--gold);padding:1px 7px;border-radius:3px;
+  text-transform:none;letter-spacing:0;font-weight:500;}
+.fhint{font-size:12px;color:var(--tx3);font-style:italic;margin-bottom:7px;}
+.finput,.finput2{width:100%;background:var(--card);border:1.5px solid var(--b2);border-radius:var(--r2);
+  padding:11px 15px;font-family:'Outfit',sans-serif;font-size:14px;color:var(--tx);
+  outline:none;transition:border-color .2s,box-shadow .2s;line-height:1.6;}
+.finput:focus,.finput2:focus{border-color:var(--gold);box-shadow:0 0 0 3px var(--goldbg);}
+.finput::placeholder,.finput2::placeholder{color:var(--tx3);font-style:italic;}
+.finput2{resize:vertical;min-height:86px;}
+.finput2.tall{min-height:130px;}
+.finput2.short{min-height:52px;}
+
+/* info / insight boxes */
+.ibox{border-left:3px solid var(--blue);background:var(--bluebg);
+  border-radius:0 var(--r) var(--r) 0;padding:13px 16px;margin-bottom:20px;}
+.ibox p{font-size:13.5px;color:#8BBFE8;line-height:1.6;}
+.ibox p strong{color:#C0D8F8;}
+body.light .ibox p{color:var(--blue);}
+body.light .ibox p strong{color:var(--blue);}
+.xbox{border-left:3px solid var(--gold);background:var(--goldbg);
+  border-radius:0 var(--r) var(--r) 0;padding:13px 16px;margin-bottom:20px;}
+.xbox p{font-size:13.5px;color:#D4A86A;line-height:1.6;}
+.xbox p strong{color:#E8C07A;}
+body.light .xbox p{color:var(--gold);}
+.gbox{border-left:3px solid var(--green);background:var(--greenbg);
+  border-radius:0 var(--r) var(--r) 0;padding:13px 16px;margin-bottom:20px;}
+.gbox p{font-size:13.5px;color:var(--green);line-height:1.6;}
+.gbox p strong{color:var(--green);}
+
+/* scale */
+.scale-wrap{margin-bottom:20px;}
+.scale-track{display:flex;gap:5px;margin-top:9px;}
+.scale-btn{flex:1;height:35px;background:var(--card);border:1.5px solid var(--b2);border-radius:var(--r3);
+  font-size:13px;font-weight:600;color:var(--tx3);cursor:pointer;
+  transition:all .15s;font-family:'Outfit',sans-serif;}
+.scale-btn:hover{border-color:var(--gold);color:var(--gold);}
+.scale-btn.sel{background:var(--gold);border-color:var(--gold);color:#0B0E13;}
+.scale-lbls{display:flex;justify-content:space-between;font-size:11px;color:var(--tx3);margin-top:5px;font-style:italic;}
+
+/* tasks */
+.task{display:flex;align-items:flex-start;gap:11px;padding:11px 14px;background:var(--card);
+  border:1px solid var(--b1);border-radius:var(--r2);margin-bottom:8px;cursor:pointer;transition:all .15s;}
+.task:hover{border-color:var(--b2);}
+.task.done{opacity:.6;}
+.task-check{width:18px;height:18px;border:2px solid var(--b3);border-radius:4px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;transition:all .15s;margin-top:1px;}
+.task.done .task-check{background:var(--green);border-color:var(--green);}
+.task-check svg{display:none;width:10px;height:10px;}
+.task.done .task-check svg{display:block;}
+.task-txt{font-size:13.5px;color:var(--tx);line-height:1.5;}
+.task.done .task-txt{text-decoration:line-through;color:var(--tx3);}
+
+/* ━━ HOME PAGE ━━ */
+.home-hero{background:linear-gradient(135deg,var(--card) 0%,var(--card2) 100%);
+  border:1px solid var(--b1);border-radius:14px;padding:32px 36px;margin-bottom:28px;position:relative;overflow:hidden;}
+.home-hero::before{content:'';position:absolute;top:-40px;right:-40px;width:180px;height:180px;
+  border-radius:50%;background:radial-gradient(circle,rgba(201,144,58,.12) 0%,transparent 70%);}
+.home-hero-tag{font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:10px;}
+.home-hero-title{font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:700;color:var(--tx);
+  line-height:1.2;margin-bottom:10px;}
+.home-hero-sub{font-size:14px;color:var(--tx2);line-height:1.65;max-width:480px;margin-bottom:20px;}
+.home-cards{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:28px;}
+.home-card{background:var(--card);border:1px solid var(--b1);border-radius:var(--r);padding:20px 22px;
+  cursor:pointer;transition:all .2s;}
+.home-card:hover{border-color:var(--b3);transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.25);}
+body.light .home-card:hover{box-shadow:0 8px 24px rgba(0,0,0,.08);}
+.hc-icon{font-size:24px;margin-bottom:10px;}
+.hc-title{font-size:14px;font-weight:600;color:var(--tx);margin-bottom:5px;}
+.hc-desc{font-size:12.5px;color:var(--tx3);line-height:1.5;}
+
+/* test result card on home */
+.test-result-card{background:var(--card);border:1px solid var(--goldbr);border-radius:var(--r);padding:20px 22px;margin-bottom:20px;display:none;}
+.test-result-card.visible{display:block;}
+.trc-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+.trc-profile{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:700;color:var(--gold);}
+.trc-date{font-size:11px;color:var(--tx3);font-family:'JetBrains Mono',monospace;}
+.trc-desc{font-size:13.5px;color:var(--tx2);line-height:1.6;margin-bottom:12px;}
+.trc-actions{display:flex;gap:8px;}
+
+/* ━━ DIAGNOSTIC TEST OVERLAY ━━ */
+.test-overlay{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:500;
+  display:none;align-items:center;justify-content:center;padding:20px;}
+body.light .test-overlay{background:rgba(0,0,0,.6);}
+.test-overlay.on{display:flex;animation:fo .25s ease;}
+@keyframes fo{from{opacity:0;}to{opacity:1;}}
+.test-box{background:var(--surf);border:1px solid var(--b1);border-radius:18px;
+  width:640px;max-width:100%;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;
+  box-shadow:0 48px 120px rgba(0,0,0,.7);}
+.test-head{padding:28px 32px 20px;border-bottom:1px solid var(--b1);}
+.test-progress-row{display:flex;align-items:center;gap:12px;margin-bottom:12px;}
+.test-prog-bar{flex:1;height:4px;background:var(--b2);border-radius:2px;overflow:hidden;}
+.test-prog-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--gold2));border-radius:2px;transition:width .4s ease;}
+.test-prog-txt{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--tx3);}
+.test-q-num{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.15em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:8px;}
+.test-q-txt{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:600;color:var(--tx);
+  line-height:1.3;}
+.test-body{flex:1;overflow-y:auto;padding:24px 32px;}
+.test-options{display:flex;flex-direction:column;gap:10px;}
+.test-opt{display:flex;align-items:flex-start;gap:14px;padding:14px 18px;
+  background:var(--card);border:1.5px solid var(--b2);border-radius:var(--r);
+  cursor:pointer;transition:all .18s;text-align:left;}
+.test-opt:hover{border-color:var(--gold);background:var(--goldbg);}
+.test-opt.sel{border-color:var(--gold);background:var(--goldbg);}
+.test-opt-letter{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;
+  color:var(--gold);background:var(--goldbg);border:1px solid var(--goldbr);
+  width:24px;height:24px;border-radius:4px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+.test-opt.sel .test-opt-letter{background:var(--gold);color:#0B0E13;}
+.test-opt-txt{font-size:14px;color:var(--tx);line-height:1.45;}
+.test-opt.sel .test-opt-txt{color:var(--tx);}
+.test-foot{padding:18px 32px;border-top:1px solid var(--b1);display:flex;justify-content:space-between;align-items:center;}
+.test-nav-hint{font-size:12px;color:var(--tx3);}
+
+/* Test result screen */
+.test-result{padding:32px;display:none;flex-direction:column;align-items:center;text-align:center;}
+.test-result.on{display:flex;}
+.tr-profile-icon{font-size:56px;margin-bottom:16px;animation:pulse 2s ease infinite;}
+@keyframes pulse{0%,100%{transform:scale(1);}50%{transform:scale(1.06);}}
+.tr-profile-name{font-family:'Cormorant Garamond',serif;font-size:36px;font-weight:700;
+  color:var(--gold);margin-bottom:8px;}
+.tr-profile-sub{font-size:13px;color:var(--tx3);font-family:'JetBrains Mono',monospace;
+  text-transform:uppercase;letter-spacing:.12em;margin-bottom:20px;}
+.tr-desc{font-size:15.5px;color:var(--tx2);line-height:1.7;max-width:480px;margin-bottom:24px;}
+.tr-steps{background:var(--card);border:1px solid var(--b1);border-radius:var(--r);
+  padding:20px 24px;text-align:left;width:100%;max-width:480px;margin-bottom:24px;}
+.tr-steps-title{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;
+  color:var(--tx3);margin-bottom:14px;}
+.tr-step{display:flex;gap:12px;margin-bottom:12px;align-items:flex-start;}
+.tr-step-num{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;
+  color:var(--gold);background:var(--goldbg);width:22px;height:22px;border-radius:4px;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+.tr-step-txt{font-size:13.5px;color:var(--tx2);line-height:1.5;}
+
+/* ━━ TIRADÚVIDAS ━━ */
+.chat-wrap{display:flex;flex-direction:column;gap:0;}
+.chat-messages{display:flex;flex-direction:column;gap:14px;margin-bottom:20px;}
+.chat-msg{border-radius:var(--r);padding:16px 18px;border:1px solid var(--b1);max-width:100%;}
+.chat-msg.student{background:var(--card);border-color:var(--b2);}
+.chat-msg.admin{background:var(--goldbg);border-color:var(--goldbr);}
+.chat-msg-meta{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
+.chat-msg-who{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;}
+.chat-msg.student .chat-msg-who{color:var(--blue);}
+.chat-msg.admin .chat-msg-who{color:var(--gold);}
+.chat-msg-date{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--tx3);}
+.chat-msg-body{font-size:14px;color:var(--tx);line-height:1.6;}
+.chat-pending{display:flex;align-items:center;gap:8px;padding:10px 14px;
+  background:var(--amberbg);border:1px solid rgba(212,135,74,.2);border-radius:var(--r2);
+  font-size:12.5px;color:var(--amber);margin-bottom:14px;}
+.chat-empty{padding:32px;text-align:center;color:var(--tx3);font-size:14px;}
+.chat-compose{background:var(--card);border:1px solid var(--b1);border-radius:var(--r);padding:18px 20px;}
+.chat-compose-label{font-size:11px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;
+  color:var(--tx2);margin-bottom:10px;}
+.chat-inp{width:100%;background:var(--surf);border:1.5px solid var(--b2);border-radius:var(--r2);
+  padding:11px 15px;font-family:'Outfit',sans-serif;font-size:14px;color:var(--tx);
+  outline:none;resize:vertical;min-height:80px;transition:border-color .2s;line-height:1.6;}
+body.light .chat-inp{background:var(--bg);}
+.chat-inp:focus{border-color:var(--gold);box-shadow:0 0 0 3px var(--goldbg);}
+.chat-inp::placeholder{color:var(--tx3);font-style:italic;}
+.chat-send-row{display:flex;justify-content:flex-end;margin-top:10px;}
+
+/* ━━ PANIC BUTTON ━━ */
+.panic-btn{position:fixed;bottom:28px;right:28px;z-index:300;
+  width:58px;height:58px;border-radius:50%;border:none;cursor:pointer;
+  background:linear-gradient(135deg,#E05252,#C03030);
+  box-shadow:0 4px 20px rgba(224,82,82,.5);
+  display:flex;align-items:center;justify-content:center;font-size:24px;
+  transition:all .2s;animation:panicPulse 3s ease infinite;}
+.panic-btn:hover{transform:scale(1.1);box-shadow:0 6px 28px rgba(224,82,82,.7);animation:none;}
+@keyframes panicPulse{0%,90%,100%{box-shadow:0 4px 20px rgba(224,82,82,.5);}95%{box-shadow:0 4px 30px rgba(224,82,82,.8),0 0 0 8px rgba(224,82,82,.15);}}
+.panic-tooltip{position:absolute;right:68px;background:var(--card);border:1px solid var(--b2);
+  border-radius:var(--r2);padding:6px 12px;font-size:12px;color:var(--tx);white-space:nowrap;
+  opacity:0;pointer-events:none;transition:opacity .2s;}
+.panic-btn:hover .panic-tooltip{opacity:1;}
+
+/* Panic overlay */
+.panic-overlay{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:600;
+  display:none;align-items:center;justify-content:center;padding:20px;}
+.panic-overlay.on{display:flex;animation:fo .25s ease;}
+.panic-box{background:var(--surf);border:1px solid var(--redbr);border-radius:18px;
+  width:580px;max-width:100%;box-shadow:0 48px 120px rgba(0,0,0,.8);}
+.panic-box-head{padding:24px 28px 18px;border-bottom:1px solid var(--b1);}
+.panic-step-ind{display:flex;gap:6px;margin-bottom:14px;}
+.panic-step-dot{width:28px;height:4px;border-radius:2px;background:var(--b2);transition:background .3s;}
+.panic-step-dot.on{background:var(--red);}
+.panic-step-dot.done{background:var(--green);}
+.panic-box-h{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:700;color:var(--tx);}
+.panic-box-sub{font-size:13px;color:var(--tx3);margin-top:4px;}
+.panic-box-body{padding:22px 28px;}
+.panic-opts{display:flex;flex-direction:column;gap:9px;}
+.panic-opt{display:flex;align-items:center;gap:12px;padding:13px 16px;
+  background:var(--card);border:1.5px solid var(--b2);border-radius:var(--r);
+  cursor:pointer;transition:all .18s;font-size:14px;color:var(--tx);}
+.panic-opt:hover{border-color:var(--red);background:var(--redbg);}
+.panic-opt.sel{border-color:var(--red);background:var(--redbg);color:var(--tx);}
+.panic-opt-icon{font-size:20px;flex-shrink:0;}
+.panic-box-foot{padding:16px 28px;border-top:1px solid var(--b1);display:flex;justify-content:flex-end;gap:8px;}
+
+/* Panic exercise result */
+.panic-exercise{padding:24px 28px;display:none;}
+.panic-exercise.on{display:block;}
+.pe-icon{font-size:48px;text-align:center;margin-bottom:16px;}
+.pe-title{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:700;color:var(--tx);
+  text-align:center;margin-bottom:8px;}
+.pe-subtitle{font-size:13px;color:var(--tx3);text-align:center;margin-bottom:20px;font-family:'JetBrains Mono',monospace;
+  text-transform:uppercase;letter-spacing:.1em;}
+.pe-steps{display:flex;flex-direction:column;gap:12px;margin-bottom:20px;}
+.pe-step{display:flex;gap:12px;align-items:flex-start;padding:12px 16px;
+  background:var(--card);border:1px solid var(--b1);border-radius:var(--r2);}
+.pe-step-num{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;
+  color:var(--red);min-width:22px;}
+.pe-step-txt{font-size:13.5px;color:var(--tx2);line-height:1.5;}
+.pe-note{font-size:12.5px;color:var(--tx3);font-style:italic;text-align:center;line-height:1.6;}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   ADMIN AREA
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+#scAdm{flex-direction:row;}
+.adm-sb{width:260px;flex-shrink:0;background:var(--surf);border-right:1px solid var(--b1);
+  position:fixed;top:0;left:0;bottom:0;display:flex;flex-direction:column;z-index:200;}
+.adm-sb-head{padding:22px 20px 16px;border-bottom:1px solid var(--b1);}
+.adm-sb-tag{font-family:'JetBrains Mono',monospace;font-size:8.5px;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--red);margin-bottom:5px;}
+.adm-sb-logo{font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:700;color:var(--tx);}
+.adm-nav{flex:1;overflow-y:auto;padding:10px 0;}
+.adm-sec{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--tx3);padding:14px 20px 5px;}
+.adm-link{display:flex;align-items:center;gap:9px;padding:9px 12px 9px 20px;font-size:13px;
+  color:var(--tx2);cursor:pointer;border-left:2px solid transparent;transition:all .15s;user-select:none;}
+.adm-link:hover{color:var(--tx);background:rgba(255,255,255,.03);}
+body.light .adm-link:hover{background:rgba(0,0,0,.03);}
+.adm-link.on{color:var(--gold);border-left-color:var(--gold);background:var(--goldbg);font-weight:500;}
+.adm-badge{background:var(--red);color:#fff;font-size:9px;font-weight:700;padding:1px 6px;
+  border-radius:10px;margin-left:auto;font-family:'JetBrains Mono',monospace;}
+.adm-foot{padding:14px 20px;border-top:1px solid var(--b1);display:flex;align-items:center;justify-content:space-between;}
+.adm-main{margin-left:260px;flex:1;display:flex;flex-direction:column;min-height:100vh;}
+.adm-topbar{background:var(--surf);border-bottom:1px solid var(--b1);padding:0 40px;height:57px;
+  display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
+.adm-content{padding:36px 40px 80px;}
+.adm-page{display:none;}
+.adm-page.on{display:block;animation:fu .3s ease;}
+
+/* stat cards */
+.stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:28px;}
+.stat-card{background:var(--card);border:1px solid var(--b1);border-radius:var(--r);padding:18px 20px;}
+.sc-lbl{font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--tx3);margin-bottom:8px;font-family:'JetBrains Mono',monospace;}
+.sc-val{font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:700;color:var(--tx);}
+.sc-sub{font-size:11.5px;color:var(--tx3);margin-top:4px;}
+
+/* student table */
+.stu-table{width:100%;border-collapse:collapse;}
+.stu-table th{font-size:10.5px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;
+  color:var(--tx3);padding:8px 12px;border-bottom:1px solid var(--b1);text-align:left;}
+.stu-table td{padding:11px 12px;border-bottom:1px solid var(--b1);font-size:13.5px;color:var(--tx);}
+.stu-table tr:hover td{background:rgba(255,255,255,.015);}
+body.light .stu-table tr:hover td{background:rgba(0,0,0,.015);}
+.prog-chip{display:flex;align-items:center;gap:7px;}
+.prog-mini{width:60px;height:4px;background:var(--b2);border-radius:2px;overflow:hidden;}
+.prog-mini-fill{height:100%;background:var(--gold);border-radius:2px;}
+.btn-view{background:var(--bluebg);border:1px solid var(--bluebr);color:var(--blue);
+  padding:5px 12px;border-radius:var(--r3);font-size:12px;cursor:pointer;
+  font-family:'Outfit',sans-serif;transition:all .15s;}
+.btn-view:hover{background:var(--blue);color:#fff;}
+.no-students{text-align:center;padding:48px;color:var(--tx3);}
+.ns-icon{font-size:36px;margin-bottom:10px;}
+
+/* detail tabs */
+.week-tabs{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:24px;}
+.week-tab{background:var(--card);border:1px solid var(--b2);color:var(--tx2);padding:6px 13px;
+  border-radius:var(--r3);font-size:12px;cursor:pointer;font-family:'Outfit',sans-serif;transition:all .15s;}
+.week-tab.on{background:var(--goldbg);border-color:var(--goldbr);color:var(--gold);}
+.ans-block{margin-bottom:16px;}
+.ans-q{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--tx3);margin-bottom:6px;}
+.ans-txt{font-size:14px;color:var(--tx);line-height:1.65;background:var(--card);
+  border:1px solid var(--b1);border-radius:var(--r3);padding:10px 14px;}
+.ans-empty{font-size:13px;color:var(--tx3);font-style:italic;padding:8px 14px;
+  background:var(--card);border:1px solid var(--b1);border-radius:var(--r3);}
+
+/* Admin messages */
+.adm-msg-list{display:flex;flex-direction:column;gap:14px;}
+.adm-msg-item{background:var(--card);border:1px solid var(--b1);border-radius:var(--r);padding:18px 20px;}
+.adm-msg-item.unread{border-color:var(--goldbr);}
+.ami-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;}
+.ami-who{font-size:13.5px;font-weight:600;color:var(--tx);}
+.ami-email{font-size:11.5px;color:var(--tx3);margin-top:2px;}
+.ami-date{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--tx3);}
+.ami-unread-badge{background:var(--gold);color:#0B0E13;font-size:9px;font-weight:700;
+  padding:2px 7px;border-radius:10px;font-family:'JetBrains Mono',monospace;}
+.ami-question{font-size:14px;color:var(--tx);line-height:1.6;margin-bottom:12px;
+  padding:10px 14px;background:var(--surf);border:1px solid var(--b1);border-radius:var(--r2);}
+.ami-reply{background:var(--goldbg);border:1px solid var(--goldbr);border-radius:var(--r2);
+  padding:10px 14px;font-size:13.5px;color:var(--tx2);line-height:1.6;margin-bottom:12px;}
+.ami-reply-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--gold);margin-bottom:6px;}
+.ami-reply-inp{width:100%;background:var(--surf);border:1.5px solid var(--b2);border-radius:var(--r2);
+  padding:9px 13px;font-family:'Outfit',sans-serif;font-size:13.5px;color:var(--tx);
+  outline:none;resize:vertical;min-height:64px;transition:border-color .2s;}
+.ami-reply-inp:focus{border-color:var(--gold);}
+.ami-reply-inp::placeholder{color:var(--tx3);font-style:italic;}
+.ami-actions{display:flex;justify-content:flex-end;margin-top:8px;}
+.adm-msgs-empty{text-align:center;padding:48px;color:var(--tx3);}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   MODAL
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.modal-ov{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:800;
+  display:none;align-items:center;justify-content:center;padding:20px;}
+.modal-ov.on{display:flex;}
+.modal-box{background:var(--surf);border:1px solid var(--b1);border-radius:14px;
+  width:420px;max-width:100%;padding:32px;box-shadow:0 24px 80px rgba(0,0,0,.6);}
+.modal-h{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;color:var(--tx);margin-bottom:8px;}
+.modal-d{font-size:14px;color:var(--tx2);line-height:1.6;margin-bottom:24px;}
+.modal-btns{display:flex;gap:8px;justify-content:flex-end;}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   TOAST
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.toast{position:fixed;bottom:90px;right:28px;z-index:1000;
+  background:var(--card);border:1px solid var(--b2);border-radius:var(--r);
+  padding:12px 18px;display:flex;align-items:center;gap:10px;
+  box-shadow:0 8px 28px rgba(0,0,0,.4);
+  transform:translateY(20px);opacity:0;transition:all .28s;pointer-events:none;}
+.toast.on{transform:translateY(0);opacity:1;}
+.t-icon{font-size:18px;}
+.t-msg{font-size:13.5px;color:var(--tx);}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   MISC
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.det-header{background:var(--card);border:1px solid var(--b1);border-radius:var(--r);padding:20px 24px;margin-bottom:24px;}
+.det-name{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:700;color:var(--tx);margin-bottom:4px;}
+.det-meta{font-size:13px;color:var(--tx3);display:flex;gap:18px;flex-wrap:wrap;}
+.det-meta span{display:flex;align-items:center;gap:5px;}
+.adm-section-title{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600;color:var(--tx);margin-bottom:16px;}
+
+@media(max-width:720px){
+  .auth-panel{display:none;}
+  .auth-forms{padding:36px 28px;}
+  .sb,.adm-sb{transform:translateX(-100%);transition:transform .3s;}
+  .main,.adm-main{margin-left:0;}
+  .content{padding:28px 20px 80px;}
+  .home-cards{grid-template-columns:1fr;}
+  .stat-grid{grid-template-columns:1fr 1fr;}
+}
+</style>
+</head>
+<body>
+
+<!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  AUTH SCREEN
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+<div class="screen on" id="scAuth">
+  <div class="auth-bg"></div>
+  <div class="auth-dots"></div>
+  <button class="auth-theme-btn" onclick="toggleTheme()" title="Alternar tema">🌙</button>
+  <div class="auth-box">
+    <div class="auth-panel">
+      <div>
+        <div class="ap-tag">Portal do Aluno</div>
+        <div class="ap-title">Do Papel à<br>Execução</div>
+        <div class="ap-sub">O espaço onde o projeto sai da ideia e entra no mundo real.</div>
+      </div>
+      <div class="ap-feat">
+        <div class="ap-feat-row"><div class="ap-feat-dot"></div><div class="ap-feat-txt"><strong>Diagnóstico inicial</strong> para clareza e direção</div></div>
+        <div class="ap-feat-row"><div class="ap-feat-dot"></div><div class="ap-feat-txt"><strong>Módulos semanais</strong> guiados com sessões ao vivo</div></div>
+        <div class="ap-feat-row"><div class="ap-feat-dot"></div><div class="ap-feat-txt"><strong>Tira Dúvidas</strong> direto com o coach</div></div>
+        <div class="ap-feat-row"><div class="ap-feat-dot"></div><div class="ap-feat-txt"><strong>Botão de Pânico</strong> para quando travar</div></div>
+      </div>
+    </div>
+    <div class="auth-forms">
+      <div class="auth-tabs">
+        <button class="auth-tab on" onclick="authTab('login',this)">Entrar</button>
+        <button class="auth-tab" onclick="authTab('register',this)">Criar conta</button>
+      </div>
+      <!-- LOGIN -->
+      <div class="auth-form on" id="af-login">
+        <div class="auth-h">Bem-vinda de volta</div>
+        <div class="auth-desc">Entre com seu e-mail e senha para continuar de onde parou.</div>
+        <div class="fld"><label class="flbl">E-mail</label><input class="finp" type="email" id="li-email" placeholder="seu@email.com"></div>
+        <div class="fld"><label class="flbl">Senha</label><input class="finp" type="password" id="li-pass" placeholder="••••••••"></div>
+        <button class="btn-auth" onclick="doLogin()">Entrar</button>
+        <div class="auth-msg" id="li-msg"></div>
+        <span class="auth-link" onclick="authTab('forgot',null)">Esqueci minha senha</span>
+      </div>
+      <!-- REGISTER -->
+      <div class="auth-form" id="af-register">
+        <div class="auth-h">Criar sua conta</div>
+        <div class="auth-desc">Preencha os dados abaixo. A pergunta de segurança é usada para recuperar o acesso.</div>
+        <div class="fld"><label class="flbl">Nome completo</label><input class="finp" type="text" id="rg-name" placeholder="Seu nome"></div>
+        <div class="fld"><label class="flbl">E-mail</label><input class="finp" type="email" id="rg-email" placeholder="seu@email.com"></div>
+        <div class="fld"><label class="flbl">Senha</label><input class="finp" type="password" id="rg-pass" placeholder="Mínimo 6 caracteres"></div>
+        <div class="fld"><label class="flbl">Confirmar senha</label><input class="finp" type="password" id="rg-pass2" placeholder="Repita a senha"></div>
+        <div class="fld"><label class="flbl">Pergunta de segurança</label>
+          <select class="finp" id="rg-secq" style="cursor:pointer;">
+            <option value="">— Escolha uma pergunta —</option>
+            <option>Qual o nome do seu primeiro pet?</option>
+            <option>Qual o nome da rua onde você cresceu?</option>
+            <option>Qual a cidade onde sua mãe nasceu?</option>
+            <option>Qual era o apelido da sua avó?</option>
+            <option>Qual foi seu primeiro carro?</option>
+          </select>
+        </div>
+        <div class="fld"><label class="flbl">Resposta secreta</label><input class="finp" type="text" id="rg-seca" placeholder="Sua resposta (guarde bem)"></div>
+        <button class="btn-auth" onclick="doRegister()">Criar conta</button>
+        <div class="auth-msg" id="rg-msg"></div>
+      </div>
+      <!-- FORGOT -->
+      <div class="auth-form" id="af-forgot">
+        <div class="auth-h">Recuperar acesso</div>
+        <div class="auth-desc">Informe seu e-mail para encontrarmos sua pergunta de segurança.</div>
+        <div id="forgot-step1">
+          <div class="fld"><label class="flbl">E-mail</label><input class="finp" type="email" id="fp-email" placeholder="seu@email.com"></div>
+          <button class="btn-auth" onclick="forgotStep1()">Continuar</button>
+        </div>
+        <div id="forgot-step2" style="display:none;">
+          <div class="fld">
+            <label class="flbl" id="fp-q-label">Pergunta de segurança</label>
+            <input class="finp" type="text" id="fp-answer" placeholder="Sua resposta">
+          </div>
+          <div class="fld"><label class="flbl">Nova senha</label><input class="finp" type="password" id="fp-newpass" placeholder="Nova senha (mín. 6 caracteres)"></div>
+          <button class="btn-auth" onclick="forgotStep2()">Redefinir senha</button>
+        </div>
+        <div class="auth-msg" id="fp-msg"></div>
+        <span class="auth-link" onclick="authTab('login',null)">← Voltar para o login</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  STUDENT APP
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+<div class="screen" id="scApp">
+  <!-- SIDEBAR -->
+  <nav class="sb">
+    <div class="sb-head">
+      <div class="sb-tag">Portal do Aluno</div>
+      <div class="sb-logo">Do Papel à Execução</div>
+    </div>
+    <div class="sb-user"><div class="sb-ulbl">Aluno</div><div class="sb-uname" id="sb-name">—</div></div>
+    <div class="sb-prog">
+      <div class="sb-prog-row"><span>Progresso geral</span><span id="sb-pct">0%</span></div>
+      <div class="sb-bar"><div class="sb-fill" id="sb-fill" style="width:0%"></div></div>
+    </div>
+    <div class="sb-nav">
+      <div class="sb-sec">Início</div>
+      <div class="sb-link on" onclick="showPage('home',this)"><div class="sb-dot"></div>Início</div>
+      <div class="sb-sec">Módulos</div>
+      <div class="sb-link" onclick="showPage('w1',this)"><div class="sb-dot"></div>Semana 1 — Diagnóstico</div>
+      <div class="sb-link" onclick="showPage('w2',this)"><div class="sb-dot"></div>Semana 2 — Estratégia</div>
+      <div class="sb-link" onclick="showPage('w3',this)"><div class="sb-dot"></div>Semana 3 — Execução</div>
+      <div class="sb-link" onclick="showPage('w4',this)"><div class="sb-dot"></div>Semana 4 — Consolidação</div>
+      <div class="sb-sec">Ferramentas</div>
+      <div class="sb-link" onclick="showPage('map',this)"><div class="sb-dot"></div>Mapa de Clareza</div>
+      <div class="sb-link" onclick="showPage('reflection',this)"><div class="sb-dot"></div>Reflexão Final</div>
+      <div class="sb-link" id="sb-chat-link" onclick="showPage('chat',this)">
+        <div class="sb-dot"></div>Tira Dúvidas
+        <span class="sb-badge" id="sb-chat-badge" style="display:none">!</span>
+      </div>
+    </div>
+    <div class="sb-foot">
+      <span class="sb-foot-txt" id="sb-session-info">v4.0</span>
+      <button class="btn-logout" onclick="doLogout()">Sair</button>
+    </div>
+  </nav>
+
+  <!-- MAIN -->
+  <div class="main">
+    <div class="topbar">
+      <div class="tb-left">
+        <span class="tb-badge" id="tb-badge">Início</span>
+        <span class="tb-title" id="tb-title">Bem-vinda</span>
+      </div>
+      <div class="tb-right">
+        <button class="btn-theme" onclick="toggleTheme()" id="theme-btn" title="Alternar tema">🌙</button>
+      </div>
+    </div>
+    <div class="content">
+
+      <!-- HOME -->
+      <div class="page on" id="page-home">
+        <div class="pg-eye">Início</div>
+        <h1 class="pg-h1">Sua jornada começa aqui.</h1>
+        <p class="pg-sub">Antes de avançar pelos módulos, faça o teste de diagnóstico para entender seu ponto de partida e receber um direcionamento personalizado.</p>
+
+        <!-- test result summary -->
+        <div class="test-result-card" id="home-test-card">
+          <div class="trc-header">
+            <div>
+              <div style="font-size:11px;color:var(--tx3);font-family:'JetBrains Mono',monospace;margin-bottom:4px;text-transform:uppercase;letter-spacing:.1em">Seu perfil</div>
+              <div class="trc-profile" id="trc-profile-name">—</div>
+            </div>
+            <div class="trc-date" id="trc-date">—</div>
+          </div>
+          <div class="trc-desc" id="trc-desc">—</div>
+          <div class="trc-actions">
+            <button class="btn btn-ghost" onclick="openTest()">🔄 Refazer teste</button>
+          </div>
+        </div>
+
+        <!-- CTA if no test yet -->
+        <div id="home-test-cta">
+          <div class="home-hero">
+            <div class="home-hero-tag">Diagnóstico Estratégico</div>
+            <div class="home-hero-title">Descubra seu ponto de partida</div>
+            <div class="home-hero-sub">20 perguntas. 5 minutos. Um direcionamento claro sobre como começar de forma efetiva e sem perder energia.</div>
+            <button class="btn btn-gold" onclick="openTest()" style="font-size:14px;padding:12px 24px;">▶ Fazer o diagnóstico agora</button>
+          </div>
+        </div>
+
+        <div class="hr"></div>
+        <div class="sec-h">Navegar pelos módulos</div>
+        <div class="home-cards">
+          <div class="home-card" onclick="showPage('w1',null)">
+            <div class="hc-icon">🔍</div>
+            <div class="hc-title">Semana 1 — Diagnóstico</div>
+            <div class="hc-desc">Clareza sobre o projeto, o bloqueio real e o comprometimento.</div>
+          </div>
+          <div class="home-card" onclick="showPage('w2',null)">
+            <div class="hc-icon">🗺</div>
+            <div class="hc-title">Semana 2 — Estratégia</div>
+            <div class="hc-desc">Plano de execução concreto com as 3 ações da semana.</div>
+          </div>
+          <div class="home-card" onclick="showPage('w3',null)">
+            <div class="hc-icon">⚡</div>
+            <div class="hc-title">Semana 3 — Execução</div>
+            <div class="hc-desc">25 minutos de trabalho real com acompanhamento presente.</div>
+          </div>
+          <div class="home-card" onclick="showPage('w4',null)">
+            <div class="hc-icon">🏆</div>
+            <div class="hc-title">Semana 4 — Consolidação</div>
+            <div class="hc-desc">Reconhecer o caminho e construir autonomia para os próximos 30 dias.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- W1 -->
+      <div class="page" id="page-w1">
+        <div class="pg-eye">Semana 01 · 60–75 min</div><h1 class="pg-h1">Diagnóstico e Clareza</h1>
+        <p class="pg-sub">A sessão mais importante. Aqui mapeamos onde o projeto está, quem você é como realizador e qual é o bloqueio real — não o apresentado.</p>
+        <div class="sess-bar"><div class="sess-bar-lbl">Salvo em: <strong id="w1-ts">Nunca</strong></div><button class="btn btn-red" onclick="openClear('w1')">🗑 Limpar</button><button class="btn btn-gold" onclick="saveSession('w1')">💾 Salvar sessão</button></div>
+        <div class="sec-h">O Projeto</div>
+        <div class="qb star"><div class="qnum">01 — O projeto</div><div class="qtxt">Descreva seu projeto em uma frase. Não o que você acha que deveria ser — o que realmente é.</div><div class="qnote">Sem rodeios. Sem qualificar. Uma frase direta.</div><textarea class="qans" id="w1_q1" placeholder="Meu projeto é..."></textarea></div>
+        <div class="qb"><div class="qnum">02</div><div class="qtxt">Há quanto tempo esse projeto existe na sua cabeça?</div><textarea class="qans" id="w1_q2" placeholder="Sua resposta..."></textarea></div>
+        <div class="qb"><div class="qnum">03</div><div class="qtxt">O que já foi feito até agora?</div><div class="qnote">Seja específica. O que existe hoje que é tangível?</div><textarea class="qans" id="w1_q3" placeholder="O que já existe é..."></textarea></div>
+        <div class="qb star"><div class="qnum">04 — O bloqueio real</div><div class="qtxt">Por que esse projeto ainda não saiu do papel?</div><div class="qnote">Dê a primeira resposta que vier. Vamos além dela na sessão.</div><textarea class="qans" id="w1_q4" placeholder="O que me trava é..."></textarea></div>
+        <div class="qb"><div class="qnum">05</div><div class="qtxt">Se você soubesse que ia funcionar, o que você faria primeiro?</div><textarea class="qans" id="w1_q5" placeholder="Se eu soubesse que ia funcionar..."></textarea></div>
+        <div class="hr"></div><div class="sec-h">Quem Realiza</div>
+        <div class="qb"><div class="qnum">06</div><div class="qtxt">Descreva como você costuma se comportar quando começa algo novo.</div><textarea class="qans" id="w1_q6" placeholder="Geralmente eu..."></textarea></div>
+        <div class="qb"><div class="qnum">07</div><div class="qtxt">Qual foi o projeto ou desafio que você mais se orgulha de ter realizado?</div><textarea class="qans" id="w1_q7" placeholder="O que funcionou foi..."></textarea></div>
+        <div class="qb"><div class="qnum">08</div><div class="qtxt">O que esse projeto tem de diferente dos outros que não saíram do papel?</div><textarea class="qans" id="w1_q8" placeholder="A diferença é..."></textarea></div>
+        <div class="hr"></div>
+        <div class="scale-wrap"><div class="flabel">13 — Nível de comprometimento</div><div class="fhint">Numa escala de 1 a 10, qual é o seu comprometimento real com avançar esse projeto?</div>
+          <div class="scale-track" id="sc-w1"><button class="scale-btn" onclick="setScale('sc-w1','w1_scale',1)">1</button><button class="scale-btn" onclick="setScale('sc-w1','w1_scale',2)">2</button><button class="scale-btn" onclick="setScale('sc-w1','w1_scale',3)">3</button><button class="scale-btn" onclick="setScale('sc-w1','w1_scale',4)">4</button><button class="scale-btn" onclick="setScale('sc-w1','w1_scale',5)">5</button><button class="scale-btn" onclick="setScale('sc-w1','w1_scale',6)">6</button><button class="scale-btn" onclick="setScale('sc-w1','w1_scale',7)">7</button><button class="scale-btn" onclick="setScale('sc-w1','w1_scale',8)">8</button><button class="scale-btn" onclick="setScale('sc-w1','w1_scale',9)">9</button><button class="scale-btn" onclick="setScale('sc-w1','w1_scale',10)">10</button></div>
+          <div class="scale-lbls"><span>Sem comprometimento</span><span>Totalmente comprometido</span></div>
+          <input type="hidden" id="w1_scale">
+        </div>
+        <div class="hr"></div><div class="sec-h">Insights da Sessão</div>
+        <div class="field"><div class="flabel">Bloqueio real identificado</div><textarea class="finput2" id="w1_block" placeholder="O bloqueio real encontrado (diferente do apresentado)..."></textarea></div>
+        <div class="field"><div class="flabel">Objetivo definido para as 4 semanas</div><textarea class="finput2 short" id="w1_goal" placeholder="O objetivo específico acordado na sessão..."></textarea></div>
+        <div class="field"><div class="flabel">Outros insights da sessão</div><textarea class="finput2" id="w1_notes" placeholder="Percepções, surpresas, o que ficou da conversa..."></textarea></div>
+        <div class="hr"></div><div class="sec-h">Tarefa da Semana 1</div>
+        <div class="ibox"><p><strong>Tarefa:</strong> Escreva em meia página: "Se esse projeto existisse e funcionasse, o que mudaria na minha vida e na vida de quem eu quero impactar?" Honestidade acima de qualidade.</p></div>
+        <div class="field"><div class="flabel">Minha resposta à tarefa</div><textarea class="finput2 tall" id="w1_task" placeholder="Se esse projeto existisse e funcionasse..."></textarea></div>
+      </div>
+
+      <!-- W2 -->
+      <div class="page" id="page-w2">
+        <div class="pg-eye">Semana 02 · 60–75 min</div><h1 class="pg-h1">Estratégia</h1>
+        <p class="pg-sub">Construir um plano de execução concreto. Não uma lista de desejos — uma sequência onde cada passo habilita o próximo.</p>
+        <div class="sess-bar"><div class="sess-bar-lbl">Salvo em: <strong id="w2-ts">Nunca</strong></div><button class="btn btn-red" onclick="openClear('w2')">🗑 Limpar</button><button class="btn btn-gold" onclick="saveSession('w2')">💾 Salvar sessão</button></div>
+        <div class="sec-h">Revisão da Tarefa</div>
+        <div class="qb"><div class="qnum">01</div><div class="qtxt">Você fez a tarefa? Como foi o processo de escrever?</div><textarea class="qans" id="w2_q1" placeholder="Sua resposta..."></textarea></div>
+        <div class="qb"><div class="qnum">02</div><div class="qtxt">Teve alguma frase que te surpreendeu enquanto escrevia?</div><textarea class="qans" id="w2_q2" placeholder="Insights que apareceram..."></textarea></div>
+        <div class="hr"></div><div class="sec-h">Recursos e Restrições</div>
+        <div class="qb"><div class="qnum">05</div><div class="qtxt">O que você já tem disponível para avançar?</div><textarea class="qans" id="w2_q5" placeholder="Habilidades, materiais, contatos, ferramentas..."></textarea></div>
+        <div class="qb"><div class="qnum">06</div><div class="qtxt">Qual é o tempo real que você pode dedicar nos próximos 14 dias?</div><div class="qnote">Não "vou tentar" — quantas horas, em quais dias?</div><textarea class="qans" id="w2_q6" placeholder="Ex: 1h na segunda, quarta e sexta..."></textarea></div>
+        <div class="qb"><div class="qnum">07</div><div class="qtxt">Existe alguma dependência externa para avançar?</div><textarea class="qans" id="w2_q7" placeholder="Dependências identificadas..."></textarea></div>
+        <div class="hr"></div><div class="sec-h">Plano de Execução</div>
+        <div class="qb"><div class="qnum">09</div><div class="qtxt">Dividindo o projeto em 5 etapas grandes, quais seriam?</div><textarea class="qans" id="w2_q9" placeholder="Etapa 1:&#10;Etapa 2:&#10;Etapa 3:&#10;Etapa 4:&#10;Etapa 5:"></textarea></div>
+        <div class="qb star"><div class="qnum">10 — O gargalo</div><div class="qtxt">Dessas 5 etapas, qual é a que trava tudo se não for resolvida?</div><textarea class="qans" id="w2_q10" placeholder="A etapa crítica é..."></textarea></div>
+        <div class="qb"><div class="qnum">11</div><div class="qtxt">O que seria a menor versão possível dessa etapa? O mínimo que já representa progresso?</div><textarea class="qans" id="w2_q11" placeholder="A versão mínima que já conta..."></textarea></div>
+        <div class="hr"></div><div class="sec-h">As 3 Ações da Semana</div>
+        <div class="ibox"><p>Cada ação deve responder: <strong>O quê? Até quando? Como saber que está feito?</strong></p></div>
+        <div class="field"><div class="flabel">Ação 1</div><input class="finput" id="w2_a1" placeholder="O quê | Até quando | Como verificar"></div>
+        <div class="field"><div class="flabel">Ação 2</div><input class="finput" id="w2_a2" placeholder="O quê | Até quando | Como verificar"></div>
+        <div class="field"><div class="flabel">Ação 3</div><input class="finput" id="w2_a3" placeholder="O quê | Até quando | Como verificar"></div>
+        <div class="field"><div class="flabel">A ação prioritária das três</div><input class="finput" id="w2_pri" placeholder="Se só uma fosse feita, seria..."></div>
+        <div class="hr"></div><div class="sec-h">Antecipação de Obstáculos</div>
+        <div class="qb"><div class="qnum">14</div><div class="qtxt">O que poderia te impedir de executar o plano?</div><textarea class="qans" id="w2_q14" placeholder="Obstáculos previsíveis..."></textarea></div>
+        <div class="qb"><div class="qnum">15</div><div class="qtxt">Se você travar, o que normalmente acontece? Qual é seu padrão de fuga?</div><textarea class="qans" id="w2_q15" placeholder="Meu padrão de fuga é..."></textarea></div>
+        <div class="qb"><div class="qnum">16</div><div class="qtxt">O que você pode fazer para não deixar esse padrão te dominar?</div><textarea class="qans" id="w2_q16" placeholder="Minha estratégia é..."></textarea></div>
+        <div class="field" style="margin-top:20px"><div class="flabel">Anotações gerais</div><textarea class="finput2" id="w2_notes" placeholder="Outros insights da sessão..."></textarea></div>
+      </div>
+
+      <!-- W3 -->
+      <div class="page" id="page-w3">
+        <div class="pg-eye">Semana 03 · 60–75 min</div><h1 class="pg-h1">Execução Assistida</h1>
+        <p class="pg-sub">A sessão mais importante. Você vai executar durante a sessão — 25 minutos de trabalho real com acompanhamento presente.</p>
+        <div class="sess-bar"><div class="sess-bar-lbl">Salvo em: <strong id="w3-ts">Nunca</strong></div><button class="btn btn-red" onclick="openClear('w3')">🗑 Limpar</button><button class="btn btn-gold" onclick="saveSession('w3')">💾 Salvar sessão</button></div>
+        <div class="xbox"><p><strong>Chegue preparado:</strong> projeto aberto e pronto para trabalhar. Os 25 minutos de execução são o coração desta sessão.</p></div>
+        <div class="sec-h">Revisão da Semana</div>
+        <div class="qb"><div class="qnum">01</div><div class="qtxt">Das 3 ações do plano, quantas foram feitas? O que aconteceu?</div><textarea class="qans" id="w3_q1" placeholder="Ação 1: ✓/✗&#10;Ação 2: ✓/✗&#10;Ação 3: ✓/✗"></textarea></div>
+        <div class="qb"><div class="qnum">03</div><div class="qtxt">Como você se sentiu no processo de executar? Houve momentos de fluxo?</div><textarea class="qans" id="w3_q3" placeholder="A experiência emocional de executar..."></textarea></div>
+        <div class="qb"><div class="qnum">06</div><div class="qtxt">Alguma coisa mudou na sua percepção do projeto desde que começou a executar?</div><textarea class="qans" id="w3_q6" placeholder="O que a execução revelou..."></textarea></div>
+        <div class="hr"></div><div class="sec-h">Bloco de 25 Minutos — Execução em Sessão</div>
+        <div class="ibox"><p>Preencha antes de começar e após terminar os 25 minutos.</p></div>
+        <div class="field"><div class="flabel">O que vou executar agora</div><textarea class="finput2 short" id="w3_plan" placeholder="Vou executar..."></textarea></div>
+        <div class="field"><div class="flabel">O que foi produzido <span class="ftag">Após os 25 min</span></div><textarea class="finput2" id="w3_prod" placeholder="O que existe agora que não existia antes..."></textarea></div>
+        <div class="field"><div class="flabel">Como me sinto após a execução</div><textarea class="finput2 short" id="w3_feel" placeholder="Alegria, alívio, surpresa, frustração..."></textarea></div>
+        <div class="hr"></div><div class="sec-h">Ajuste do Plano Final</div>
+        <div class="qb"><div class="qnum">10</div><div class="qtxt">Depois do que aconteceu hoje, o que muda no plano da última semana?</div><textarea class="qans" id="w3_q10" placeholder="Ajustes..."></textarea></div>
+        <div class="qb"><div class="qnum">12</div><div class="qtxt">Existe alguma parte do projeto que você está adiando propositalmente?</div><div class="qnote">Esta é a decisão que precisa ser tomada esta semana.</div><textarea class="qans" id="w3_q12" placeholder="O que estou guardando..."></textarea></div>
+        <div class="field"><div class="flabel">O que esse projeto representa para mim agora</div><div class="fhint">Escreva em 3 frases — será usado na sessão final.</div><textarea class="finput2" id="w3_meaning" placeholder="Em três frases..."></textarea></div>
+        <div class="field"><div class="flabel">Anotações gerais</div><textarea class="finput2" id="w3_notes" placeholder="Outros insights..."></textarea></div>
+      </div>
+
+      <!-- W4 -->
+      <div class="page" id="page-w4">
+        <div class="pg-eye">Semana 04 · 60–75 min</div><h1 class="pg-h1">Consolidação e Autonomia</h1>
+        <p class="pg-sub">Reconhecer o caminho, identificar seu método pessoal e construir o plano de continuidade para os próximos 30 dias.</p>
+        <div class="sess-bar"><div class="sess-bar-lbl">Salvo em: <strong id="w4-ts">Nunca</strong></div><button class="btn btn-red" onclick="openClear('w4')">🗑 Limpar</button><button class="btn btn-gold" onclick="saveSession('w4')">💾 Salvar sessão</button></div>
+        <div class="sec-h">Revisão da Jornada</div>
+        <div class="qb"><div class="qnum">01</div><div class="qtxt">Releia o que escreveu na Semana 3. O que mais te tocou?</div><textarea class="qans" id="w4_q1" placeholder="O que me tocou foi..."></textarea></div>
+        <div class="qb"><div class="qnum">02</div><div class="qtxt">Onde o projeto estava quando você chegou, e onde está agora?</div><textarea class="qans" id="w4_q2" placeholder="Antes: ...&#10;Agora: ..."></textarea></div>
+        <div class="qb"><div class="qnum">03</div><div class="qtxt">O que te surpreendeu nesse processo?</div><textarea class="qans" id="w4_q3" placeholder="As maiores surpresas foram..."></textarea></div>
+        <div class="qb star"><div class="qnum">04 — Seu método</div><div class="qtxt">O que você descobriu sobre como você funciona melhor?</div><textarea class="qans" id="w4_q4" placeholder="Eu funciono melhor quando..."></textarea></div>
+        <div class="hr"></div><div class="sec-h">Plano de 30 Dias</div>
+        <div class="ibox"><p>Sem coach, sem sessão — <strong>só você e o projeto.</strong> O que acontece nos próximos 30 dias?</p></div>
+        <div class="field"><div class="flabel">Meta para os próximos 30 dias</div><textarea class="finput2 short" id="w4_meta" placeholder="Em 30 dias, eu vou ter..."></textarea></div>
+        <div class="field"><div class="flabel">As 3 ações mais importantes do mês</div><textarea class="finput2" id="w4_actions" placeholder="1.&#10;2.&#10;3."></textarea></div>
+        <div class="field"><div class="flabel">O que vou fazer quando travar sozinha</div><textarea class="finput2 short" id="w4_stuck" placeholder="Quando eu travar, vou..."></textarea></div>
+        <div class="field"><div class="flabel">Compromisso escrito comigo mesma</div><textarea class="finput2" id="w4_commit" placeholder="Eu me comprometo a..."></textarea></div>
+      </div>
+
+      <!-- MAP -->
+      <div class="page" id="page-map">
+        <div class="pg-eye">Ferramenta</div><h1 class="pg-h1">Mapa de Clareza</h1>
+        <p class="pg-sub">Um registro vivo do seu projeto — para você revisitar sempre que precisar se reconectar com o porquê.</p>
+        <div class="sess-bar"><div class="sess-bar-lbl">Salvo em: <strong id="map-ts">Nunca</strong></div><button class="btn btn-red" onclick="openClear('map')">🗑 Limpar</button><button class="btn btn-gold" onclick="saveSession('map')">💾 Salvar</button></div>
+        <div class="field"><div class="flabel">O projeto em uma frase</div><input class="finput" id="map_one" placeholder="Meu projeto é..."></div>
+        <div class="field"><div class="flabel">Por que esse projeto importa</div><textarea class="finput2" id="map_why" placeholder="O que muda com ele no mundo..."></textarea></div>
+        <div class="field"><div class="flabel">Para quem</div><textarea class="finput2 short" id="map_who" placeholder="As pessoas que vão se beneficiar..."></textarea></div>
+        <div class="field"><div class="flabel">O que o sucesso parece em 12 meses</div><textarea class="finput2" id="map_vision" placeholder="Em 12 meses, o projeto vai ter..."></textarea></div>
+        <div class="field"><div class="flabel">O maior risco real</div><textarea class="finput2 short" id="map_risk" placeholder="O risco que preciso encarar é..."></textarea></div>
+        <div class="field"><div class="flabel">A primeira coisa que precisa ser feita</div><input class="finput" id="map_first" placeholder="O primeiro passo concreto é..."></div>
+      </div>
+
+      <!-- REFLECTION -->
+      <div class="page" id="page-reflection">
+        <div class="pg-eye">Fechamento</div><h1 class="pg-h1">Reflexão Final</h1>
+        <p class="pg-sub">Uma carta para si mesma. Para ler quando precisar se lembrar de quem você é como realizadora.</p>
+        <div class="sess-bar"><div class="sess-bar-lbl">Salvo em: <strong id="ref-ts">Nunca</strong></div><button class="btn btn-red" onclick="openClear('reflection')">🗑 Limpar</button><button class="btn btn-gold" onclick="saveSession('reflection')">💾 Salvar</button></div>
+        <div class="xbox"><p>Escreva como se estivesse falando com você mesma daqui a um ano.</p></div>
+        <div class="field"><div class="flabel">O que você aprendeu sobre si mesma</div><textarea class="finput2 tall" id="ref_self" placeholder="Aprendi que eu..."></textarea></div>
+        <div class="field"><div class="flabel">O momento de maior orgulho das 4 semanas</div><textarea class="finput2" id="ref_proud" placeholder="Me orgulhei quando..."></textarea></div>
+        <div class="field"><div class="flabel">O que você diria para alguém no seu lugar 4 semanas atrás</div><textarea class="finput2 tall" id="ref_letter" placeholder="Querida eu..."></textarea></div>
+        <div class="field"><div class="flabel">Minha palavra para os próximos meses</div><input class="finput" id="ref_word" placeholder="Uma palavra que resume o que vem pela frente..."></div>
+      </div>
+
+      <!-- CHAT / TIRA DÚVIDAS -->
+      <div class="page" id="page-chat">
+        <div class="pg-eye">Tira Dúvidas</div>
+        <h1 class="pg-h1">Perguntas & Respostas</h1>
+        <p class="pg-sub">Manda sua dúvida aqui. Eu respondo em breve — fique de olho nesta página para ver quando chegar a resposta.</p>
+        <div id="chat-messages-wrap" class="chat-messages"></div>
+        <div class="chat-compose">
+          <div class="chat-compose-label">Sua pergunta</div>
+          <textarea class="chat-inp" id="chat-inp" placeholder="Escreva sua dúvida ou reflexão..."></textarea>
+          <div class="chat-send-row">
+            <button class="btn btn-gold" onclick="sendQuestion()">📨 Enviar pergunta</button>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /content -->
+  </div><!-- /main -->
+
+  <!-- PANIC BUTTON -->
+  <button class="panic-btn" onclick="openPanic()" id="panicBtn">
+    🆘
+    <span class="panic-tooltip">Estou travada!</span>
+  </button>
+</div>
+
+<!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  ADMIN APP
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+<div class="screen" id="scAdm">
+  <nav class="adm-sb">
+    <div class="adm-sb-head">
+      <div class="adm-sb-tag">Admin</div>
+      <div class="adm-sb-logo">Do Papel à Execução</div>
+    </div>
+    <div class="adm-nav">
+      <div class="adm-sec">Painel</div>
+      <div class="adm-link on" onclick="admPage('dashboard',this)">📊 Dashboard</div>
+      <div class="adm-link" onclick="admPage('students',this)">👥 Alunos</div>
+      <div class="adm-link" id="adm-msg-link" onclick="admPage('messages',this)">
+        💬 Mensagens
+        <span class="adm-badge" id="adm-msg-badge" style="display:none">0</span>
+      </div>
+    </div>
+    <div class="adm-foot">
+      <span style="font-size:10.5px;color:var(--tx3);font-family:'JetBrains Mono',monospace">Admin</span>
+      <button class="btn-logout" onclick="doLogout()">Sair</button>
+    </div>
+  </nav>
+
+  <div class="adm-main">
+    <div class="adm-topbar">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <span style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--red);background:var(--redbg);border:1px solid var(--redbr);padding:4px 10px;border-radius:4px;">Admin</span>
+        <span style="font-size:14px;font-weight:500;color:var(--tx);" id="adm-ttl">Dashboard</span>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <button class="btn-theme" onclick="toggleTheme()" title="Alternar tema">🌙</button>
+        <button class="btn btn-red" id="btnDelStudent" style="display:none;" onclick="confirmDeleteStudent()">🗑 Remover aluno</button>
+      </div>
+    </div>
+
+    <div class="adm-content">
+
+      <!-- DASHBOARD -->
+      <div class="adm-page on" id="adm-dashboard">
+        <h2 style="font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:700;color:var(--tx);margin-bottom:24px;">Dashboard</h2>
+        <div class="stat-grid">
+          <div class="stat-card"><div class="sc-lbl">Total de alunos</div><div class="sc-val" id="st-total">0</div><div class="sc-sub">cadastrados</div></div>
+          <div class="stat-card"><div class="sc-lbl">Com progresso</div><div class="sc-val" id="st-active">0</div><div class="sc-sub">ativos</div></div>
+          <div class="stat-card"><div class="sc-lbl">Progresso médio</div><div class="sc-val" id="st-avg">0%</div><div class="sc-sub">geral</div></div>
+          <div class="stat-card"><div class="sc-lbl">Sessões completas</div><div class="sc-val" id="st-done">0</div><div class="sc-sub">100%</div></div>
+        </div>
+        <div class="stat-grid" style="grid-template-columns:1fr 1fr;">
+          <div class="stat-card"><div class="sc-lbl">Diagnósticos feitos</div><div class="sc-val" id="st-tests">0</div><div class="sc-sub">testes realizados</div></div>
+          <div class="stat-card"><div class="sc-lbl">Mensagens pendentes</div><div class="sc-val" id="st-msgs">0</div><div class="sc-sub">aguardando resposta</div></div>
+        </div>
+        <h3 style="font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600;color:var(--tx);margin-bottom:16px;">Todos os alunos</h3>
+        <div id="adm-table-wrap"></div>
+      </div>
+
+      <!-- STUDENTS -->
+      <div class="adm-page" id="adm-students">
+        <h2 style="font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:700;color:var(--tx);margin-bottom:24px;">Alunos</h2>
+        <div id="adm-table-wrap2"></div>
+      </div>
+
+      <!-- MESSAGES -->
+      <div class="adm-page" id="adm-messages">
+        <h2 style="font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:700;color:var(--tx);margin-bottom:8px;">Mensagens</h2>
+        <p style="font-size:14px;color:var(--tx3);margin-bottom:24px;">Perguntas enviadas pelos alunos. Responda diretamente aqui.</p>
+        <div id="adm-msgs-wrap"></div>
+      </div>
+
+      <!-- STUDENT DETAIL -->
+      <div class="adm-page" id="adm-student-detail">
+        <div class="det-header">
+          <div class="det-name" id="det-name">—</div>
+          <div class="det-meta">
+            <span>📧 <span id="det-email">—</span></span>
+            <span>📈 <span id="det-prog">—</span> de progresso</span>
+          </div>
+        </div>
+        <div class="week-tabs" id="det-tabs"></div>
+        <div id="det-content"></div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  DIAGNOSTIC TEST OVERLAY
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+<div class="test-overlay" id="testOverlay">
+  <div class="test-box" id="testBox">
+    <div class="test-head" id="testHead">
+      <div class="test-progress-row">
+        <div class="test-prog-bar"><div class="test-prog-fill" id="testProgFill" style="width:0%"></div></div>
+        <div class="test-prog-txt" id="testProgTxt">0 / 20</div>
+      </div>
+      <div class="test-q-num" id="testQNum">Pergunta 01</div>
+      <div class="test-q-txt" id="testQTxt">—</div>
+    </div>
+    <div class="test-body" id="testBodyOptions">
+      <div class="test-options" id="testOptions"></div>
+    </div>
+    <div class="test-foot" id="testFoot">
+      <span class="test-nav-hint" id="testNavHint">Selecione uma opção para continuar</span>
+      <div style="display:flex;gap:8px;">
+        <button class="btn btn-ghost" onclick="closeTest()" id="testCancelBtn">Cancelar</button>
+        <button class="btn btn-gold" onclick="testNext()" id="testNextBtn" disabled>Próxima →</button>
+      </div>
+    </div>
+    <!-- RESULT SCREEN (inside test box) -->
+    <div class="test-result" id="testResult">
+      <div class="tr-profile-icon" id="trIcon">🧭</div>
+      <div class="tr-profile-name" id="trName">—</div>
+      <div class="tr-profile-sub" id="trSub">Perfil Estratégico</div>
+      <div class="tr-desc" id="trDesc">—</div>
+      <div class="tr-steps" id="trSteps"></div>
+      <div class="tr-step-note" id="trNote" style="font-size:12.5px;color:var(--tx3);font-style:italic;text-align:center;margin-bottom:20px;"></div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;">
+        <button class="btn btn-ghost" onclick="closeTest()">Fechar</button>
+        <button class="btn btn-gold" onclick="retakeTest()">🔄 Refazer</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  PANIC OVERLAY
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+<div class="panic-overlay" id="panicOverlay">
+  <div class="panic-box">
+    <!-- PANIC QUESTIONS (step 1-3) -->
+    <div id="panic-questions">
+      <div class="panic-box-head">
+        <div class="panic-step-ind">
+          <div class="panic-step-dot on" id="pd1"></div>
+          <div class="panic-step-dot" id="pd2"></div>
+          <div class="panic-step-dot" id="pd3"></div>
+        </div>
+        <div class="panic-box-h" id="panic-q-title">O que está travando você?</div>
+        <div class="panic-box-sub" id="panic-q-sub">Escolha o que mais se aproxima do que você está sentindo agora</div>
+      </div>
+      <div class="panic-box-body">
+        <div class="panic-opts" id="panic-opts"></div>
+      </div>
+      <div class="panic-box-foot">
+        <button class="btn btn-ghost" onclick="closePanic()">Cancelar</button>
+        <button class="btn" style="background:var(--red);color:#fff;" onclick="panicNext()" id="panic-next-btn" disabled>Continuar →</button>
+      </div>
+    </div>
+    <!-- PANIC EXERCISE RESULT -->
+    <div class="panic-exercise" id="panic-exercise">
+      <div class="pe-icon" id="pe-icon">🎯</div>
+      <div class="pe-title" id="pe-title">Exercício para você</div>
+      <div class="pe-subtitle" id="pe-subtitle">Desbloqueio · 5–10 min</div>
+      <div class="pe-steps" id="pe-steps"></div>
+      <div class="pe-note" id="pe-note"></div>
+      <div style="display:flex;gap:8px;justify-content:center;margin-top:20px;flex-wrap:wrap;">
+        <button class="btn btn-ghost" onclick="closePanic()">Fechar</button>
+        <button class="btn" style="background:var(--red);color:#fff;" onclick="resetPanic()">↩ Voltar ao início</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  MODAL
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+<div class="modal-ov" id="modalOv">
+  <div class="modal-box">
+    <div class="modal-h" id="modal-h">Confirmação</div>
+    <div class="modal-d" id="modal-d">Tem certeza?</div>
+    <div class="modal-btns">
+      <button class="btn btn-ghost" onclick="closeModal()">Cancelar</button>
+      <button class="btn btn-red" onclick="modalConfirm()" style="border-color:var(--red);color:var(--red);">Confirmar</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"><div class="t-icon" id="t-icon">✓</div><div class="t-msg" id="t-msg">Salvo!</div></div>
+
+<script>
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+//  CONFIG
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+const ADMIN_EMAIL='admin@admin.com';
+const ADMIN_PASS='admin123';
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+//  STORAGE UTILITIES
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+const getUsers=()=>JSON.parse(localStorage.getItem('portal_users')||'{}');
+const setUsers=u=>localStorage.setItem('portal_users',JSON.stringify(u));
+const session=()=>JSON.parse(localStorage.getItem('portal_session')||'null');
+const setSession=s=>localStorage.setItem('portal_session',JSON.stringify(s));
+const clearSession=()=>localStorage.removeItem('portal_session');
+const getTheme=()=>localStorage.getItem('portal_theme')||'dark';
+const setThemeStorage=t=>localStorage.setItem('portal_theme',t);
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+//  THEME
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+function applyTheme(t){
+  document.body.classList.toggle('light',t==='light');
+  const icon=t==='light'?'☀️':'🌙';
+  document.querySelectorAll('.btn-theme,.auth-theme-btn').forEach(b=>b.textContent=icon);
+}
+function toggleTheme(){
+  const t=document.body.classList.contains('light')?'dark':'light';
+  applyTheme(t);setThemeStorage(t);
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+//  AUTH TABS
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+function authTab(id,el){
+  document.querySelectorAll('.auth-form').forEach(f=>f.classList.remove('on'));
+  document.querySelectorAll('.auth-tab').forEach(t=>t.classList.remove('on'));
+  document.getElementById('af-'+id).classList.add('on');
+  if(el)el.classList.add('on');
+  // reset forgot steps
+  if(id==='forgot'){
+    document.getElementById('forgot-step1').style.display='';
+    document.getElementById('forgot-step2').style.display='none';
+    document.getElementById('fp-msg').className='auth-msg';
+    document.getElementById('fp-msg').textContent='';
+  }
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+//  AUTH FUNCTIONS
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+function doLogin(){
+  const email=document.getElementById('li-email').value.trim().toLowerCase();
+  const pass=document.getElementById('li-pass').value;
+  const msg=document.getElementById('li-msg');
+  msg.className='auth-msg';msg.textContent='';
+  if(!email||!pass){msg.className='auth-msg err';msg.textContent='Preencha e-mail e senha.';return;}
+  if(email===ADMIN_EMAIL&&pass===ADMIN_PASS){setSession({role:'admin',email});startAdmin();return;}
+  const users=getUsers();
+  if(!users[email]){msg.className='auth-msg err';msg.textContent='E-mail não encontrado.';return;}
+  if(users[email].password!==pass){msg.className='auth-msg err';msg.textContent='Senha incorreta.';return;}
+  setSession({role:'student',email,name:users[email].name});
+  startStudent(email,users[email].name);
+}
+
+function doRegister(){
+  const name=document.getElementById('rg-name').value.trim();
+  const email=document.getElementById('rg-email').value.trim().toLowerCase();
+  const pass=document.getElementById('rg-pass').value;
+  const pass2=document.getElementById('rg-pass2').value;
+  const secq=document.getElementById('rg-secq').value;
+  const seca=document.getElementById('rg-seca').value.trim();
+  const msg=document.getElementById('rg-msg');
+  msg.className='auth-msg';msg.textContent='';
+  if(!name||!email||!pass||!secq||!seca){msg.className='auth-msg err';msg.textContent='Preencha todos os campos.';return;}
+  if(pass.length<6){msg.className='auth-msg err';msg.textContent='Senha mínima de 6 caracteres.';return;}
+  if(pass!==pass2){msg.className='auth-msg err';msg.textContent='As senhas não coincidem.';return;}
+  const users=getUsers();
+  if(users[email]){msg.className='auth-msg err';msg.textContent='E-mail já cadastrado.';return;}
+  users[email]={name,password:pass,secQuestion:secq,secAnswer:seca.toLowerCase(),createdAt:fmtDate(new Date()),data:{}};
+  setUsers(users);
+  msg.className='auth-msg ok';msg.textContent='Conta criada! Entrando...';
+  setTimeout(()=>{setSession({role:'student',email,name});startStudent(email,name);},800);
+}
+
+function forgotStep1(){
+  const email=document.getElementById('fp-email').value.trim().toLowerCase();
+  const msg=document.getElementById('fp-msg');
+  msg.className='auth-msg';msg.textContent='';
+  if(!email){msg.className='auth-msg err';msg.textContent='Informe seu e-mail.';return;}
+  if(email===ADMIN_EMAIL){msg.className='auth-msg err';msg.textContent='Conta administrativa — contato direto necessário.';return;}
+  const users=getUsers();
+  if(!users[email]){msg.className='auth-msg err';msg.textContent='E-mail não encontrado.';return;}
+  document.getElementById('fp-q-label').textContent=users[email].secQuestion;
+  document.getElementById('forgot-step1').style.display='none';
+  document.getElementById('forgot-step2').style.display='';
+  document.getElementById('fp-email').dataset.email=email;
+}
+
+function forgotStep2(){
+  const email=document.getElementById('fp-email').dataset.email;
+  const answer=document.getElementById('fp-answer').value.trim().toLowerCase();
+  const newpass=document.getElementById('fp-newpass').value;
+  const msg=document.getElementById('fp-msg');
+  msg.className='auth-msg';msg.textContent='';
+  const users=getUsers();
+  if(!users[email]){msg.className='auth-msg err';msg.textContent='Erro. Tente novamente.';return;}
+  if(users[email].secAnswer!==answer){msg.className='auth-msg err';msg.textContent='Resposta incorreta.';return;}
+  if(newpass.length<6){msg.className='auth-msg err';msg.textContent='Senha mínima de 6 caracteres.';return;}
+  users[email].password=newpass;
+  setUsers(users);
+  msg.className='auth-msg ok';msg.textContent='Senha atualizada! Faça o login.';
+  setTimeout(()=>authTab('login',document.querySelector('.auth-tab')),1500);
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+//  SESSION LABELS & FIELDS
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+const SESS_LABELS={
+  overview:'Visão Geral',w1:'Semana 1',w2:'Semana 2',w3:'Semana 3',w4:'Semana 4',
+  map:'Mapa',reflection:'Reflexão',test:'Diagnóstico'
+};
+const SESS_FIELDS={
+  w1:['w1_q1','w1_q2','w1_q3','w1_q4','w1_q5','w1_q6','w1_q7','w1_q8','w1_scale','w1_block','w1_goal','w1_notes','w1_task'],
+  w2:['w2_q1','w2_q2','w2_q5','w2_q6','w2_q7','w2_q9','w2_q10','w2_q11','w2_a1','w2_a2','w2_a3','w2_pri','w2_q14','w2_q15','w2_q16','w2_notes'],
+  w3:['w3_q1','w3_q3','w3_q6','w3_plan','w3_prod','w3_feel','w3_q10','w3_q12','w3_meaning','w3_notes'],
+  w4:['w4_q1','w4_q2','w4_q3','w4_q4','w4_meta','w4_actions','w4_stuck','w4_commit'],
+  map:['map_one','map_why','map_who','map_vision','map_risk','map_first'],
+  reflection:['ref_self','ref_proud','ref_letter','ref_word'],
+  overview:[]
+};
+const Q_LABELS={
+  w1_q1:'Descrição do projeto',w1_q2:'Há quanto tempo existe',w1_q3:'O que já foi feito',w1_q4:'O bloqueio real',
+  w1_q5:'Se soubesse que funcionaria',w1_q6:'Comportamento ao começar algo novo',w1_q7:'Maior realização',
+  w1_q8:'Diferença desse projeto',w1_scale:'Nível de comprometimento (1–10)',w1_block:'Bloqueio real identificado',
+  w1_goal:'Objetivo das 4 semanas',w1_notes:'Insights da sessão',w1_task:'Resposta à tarefa',
+  w2_q1:'Fez a tarefa?',w2_q2:'Frase que surpreendeu',w2_q5:'O que já tem disponível',w2_q6:'Tempo disponível',
+  w2_q7:'Dependências externas',w2_q9:'5 etapas do projeto',w2_q10:'O gargalo',w2_q11:'Versão mínima do gargalo',
+  w2_a1:'Ação 1',w2_a2:'Ação 2',w2_a3:'Ação 3',w2_pri:'Ação prioritária',
+  w2_q14:'Possíveis obstáculos',w2_q15:'Padrão de fuga',w2_q16:'Estratégia contra o padrão',w2_notes:'Anotações gerais',
+  w3_q1:'Ações realizadas',w3_q3:'Sentimento na execução',w3_q6:'Mudança de percepção',
+  w3_plan:'O que vai executar',w3_prod:'O que foi produzido',w3_feel:'Como se sentiu',
+  w3_q10:'Ajustes no plano',w3_q12:'O que está adiando',w3_meaning:'O que o projeto representa',w3_notes:'Insights',
+  w4_q1:'O que tocou na reflexão',w4_q2:'Antes e depois',w4_q3:'Surpresas no processo',w4_q4:'Como você funciona melhor',
+  w4_meta:'Meta 30 dias',w4_actions:'3 ações do mês',w4_stuck:'Quando travar sozinha',w4_commit:'Compromisso',
+  map_one:'Projeto em uma frase',map_why:'Por que importa',map_who:'Para quem',map_vision:'Sucesso em 12 meses',map_risk:'Maior risco',map_first:'Primeiro passo',
+  ref_self:'O que aprendeu sobre si',ref_proud:'Momento de maior orgulho',ref_letter:'Carta para si mesma',ref_word:'Palavra para os próximos meses'
+};
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+//  STUDENT APP
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+let currentEmail='',currentName='';
+function startStudent(email,name){
+  currentEmail=email;currentName=name;
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('on'));
+  document.getElementById('scApp').classList.add('on');
+  document.getElementById('sb-name').textContent=name;
+  document.getElementById('panicBtn').style.display='flex';
+  loadAllSessions();
+  updateProgress();
+  loadHomeTestResult();
+  loadChatMessages();
+  updateChatBadge();
+}
+
+function showPage(id,el){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
+  document.getElementById('page-'+id).classList.add('on');
+  document.querySelectorAll('.sb-link').forEach(n=>n.classList.remove('on'));
+  if(el)el.classList.add('on');
+  const labels={home:'Início',w1:'Semana 1',w2:'Semana 2',w3:'Semana 3',w4:'Semana 4',
+    map:'Mapa de Clareza',reflection:'Reflexão Final',chat:'Tira Dúvidas'};
+  const bgs={home:'Início',w1:'Semana 1',w2:'Semana 2',w3:'Semana 3',w4:'Semana 4',
+    map:'Ferramenta',reflection:'Fechamento',chat:'Comunicação'};
+  document.getElementById('tb-title').textContent=labels[id]||id;
+  document.getElementById('tb-badge').textContent=bgs[id]||id;
+  if(id==='chat'){loadChatMessages();markChatRead();}
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+//  SESSION SAVE / LOAD
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+function saveSession(week){
+  if(!currentEmail)return;
+  const users=getUsers();
+  const u=users[currentEmail];
+  if(!u)return;
+  if(!u.data)u.data={};
+  const fields=SESS_FIELDS[week]||[];
+  const obj={};
+  fields.forEach(id=>{
+    const el=document.getElementById(id);
+    if(el)obj[id]=el.value;
+  });
+  u.data[week]=obj;
+  const ts=fmtDate(new Date());
+  u.data[week+'_ts']=ts;
+  const tsEl=document.getElementById(week+'-ts');
+  if(tsEl)tsEl.textContent=ts;
+  setUsers(users);
+  updateProgress();
+  const btn=event?.target;
+  if(btn){btn.classList.add('saved');setTimeout(()=>btn.classList.remove('saved'),1800);}
+  toast('💾','Sessão salva!');
+}
+
+function loadSession(week,data){
+  const fields=SESS_FIELDS[week]||[];
+  fields.forEach(id=>{
+    const el=document.getElementById(id);
+    if(el&&data[id]!==undefined)el.value=data[id];
+  });
+  const ts=data[week+'_ts']||(data&&data['ts']);
+  // load ts from parent structure
+}
+
+function loadAllSessions(){
+  const users=getUsers();
+  const u=users[currentEmail];
+  if(!u||!u.data)return;
+  const weeks=['w1','w2','w3','w4','map','reflection'];
+  weeks.forEach(w=>{
+    const wd=u.data[w];
+    if(wd){
+      const fields=SESS_FIELDS[w]||[];
+      fields.forEach(id=>{
+        const el=document.getElementById(id);
+        if(el&&wd[id]!==undefined)el.value=wd[id];
+      });
+    }
+    const ts=u.data[w+'_ts'];
+    const tsEl=document.getElementById(w+'-ts');
+    if(tsEl&&ts)tsEl.textContent=ts;
+  });
+  // restore scales
+  ['w1'].forEach(w=>{
+    const wd=u.data[w];
+    if(wd&&wd[w+'_scale']){
+      const scid='sc-'+w;
+      const btns=document.querySelectorAll('#'+scid+' .scale-btn');
+      const v=parseInt(wd[w+'_scale']);
+      btns.forEach((b,i)=>b.classList.toggle('sel',i+1===v));
+    }
+  });
+}
+
+function openClear(week){
+  openModal('Limpar sessão?',`Todos os dados da "${SESS_LABELS[week]||week}" serão apagados permanentemente.`,()=>{
+    const users=getUsers();
+    const u=users[currentEmail];
+    if(!u)return;
+    if(!u.data)u.data={};
+    u.data[week]={};
+    delete u.data[week+'_ts'];
+    setUsers(users);
+    const fields=SESS_FIELDS[week]||[];
+    fields.forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+    const tsEl=document.getElementById(week+'-ts');
+    if(tsEl)tsEl.textContent='Nunca';
+    updateProgress();
+    toast('🗑','Sessão limpa.');
+  });
+}
+
+function setScale(trackId,fieldId,val){
+  document.querySelectorAll('#'+trackId+' .scale-btn').forEach((b,i)=>b.classList.toggle('sel',i+1===val));
+  const hidden=document.getElementById(fieldId);
+  if(hidden)hidden.value=val;
+  updateProgress();
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+//  PROGRESS
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+function calcProgress(data){
+  const weeks=['w1','w2','w3','w4','map','reflection'];
+  const weekPcts={};
+  weeks.forEach(w=>{
+    const wd=data[w]||{};
+    const fields=SESS_FIELDS[w]||[];
+    if(!fields.length){weekPcts[w]=0;return;}
+    const filled=fields.filter(id=>wd[id]&&wd[id].trim()).length;
+    weekPcts[w]=Math.round((filled/fields.length)*100);
+  });
+  const total=Object.values(weekPcts).reduce((a,b)=>a+b,0);
+  return{global:Math.round(total/weeks.length),weekPcts};
+}
+
+function updateProgress(){
+  const users=getUsers();
+  const u=users[currentEmail];
+  if(!u)return;
+  const{global}=calcProgress(u.data||{});
+  document.getElementById('sb-pct').textContent=global+'%';
+  document.getElementById('sb-fill').style.width=global+'%';
+  // update done dots
+  const weeks=['w1','w2','w3','w4'];
+  weeks.forEach(w=>{
+    const{weekPcts}=calcProgress(u.data||{});
+    const pct=weekPcts[w]||0;
+    // find corresponding sb-link
+  });
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+//  DIAGNOSTIC TEST DATA
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Categories: C=Clarity, S=Structure, E=Execution, M=Motivation, A=Accountability
+const TEST_QUESTIONS=[
+  {q:'Como você descreveria seu projeto ou objetivo principal agora?',opts:[
+    {t:'Tenho uma ideia vaga — ainda não sei bem o que é',c:'C'},
+    {t:'Sei o que quero, mas não sei como chegar lá',c:'S'},
+    {t:'Tenho um plano, mas não consigo colocar em prática',c:'E'},
+    {t:'Já comecei, mas parei — e não entendo bem por quê',c:'M'}
+  ]},
+  {q:'Qual é o seu maior obstáculo no momento?',opts:[
+    {t:'Não sei por onde começar',c:'C'},
+    {t:'Falta de organização e planejamento',c:'S'},
+    {t:'Procrastinação e falta de ação consistente',c:'E'},
+    {t:'Medo, ansiedade ou bloqueio emocional',c:'M'}
+  ]},
+  {q:'Quando você pensa no projeto, o que domina?',opts:[
+    {t:'Confusão — muitas ideias e nenhuma direção clara',c:'C'},
+    {t:'Sensação de estar perdida sem um roteiro',c:'S'},
+    {t:'Frustração por saber o que fazer e não fazer',c:'E'},
+    {t:'Peso emocional — sensação de que não vai dar certo',c:'M'}
+  ]},
+  {q:'Como você costuma reagir quando trava num projeto?',opts:[
+    {t:'Fico pensando e repensando, sem chegar a conclusões',c:'C'},
+    {t:'Perco o fio da meada e não sei retomar',c:'S'},
+    {t:'Acho mil outras tarefas para fazer no lugar',c:'E'},
+    {t:'Sinto que não sou capaz e fico paralisada',c:'M'}
+  ]},
+  {q:'O que você acha que falta para esse projeto avançar?',opts:[
+    {t:'Clareza sobre o que realmente quero',c:'C'},
+    {t:'Um plano concreto com etapas definidas',c:'S'},
+    {t:'Disciplina e consistência na execução',c:'E'},
+    {t:'Mais confiança em mim mesma',c:'M'}
+  ]},
+  {q:'Com que frequência você consegue sentar e trabalhar no projeto?',opts:[
+    {t:'Raramente — quando me sento, fico perdida',c:'C'},
+    {t:'De vez em quando — não sei o que fazer primeiro',c:'S'},
+    {t:'Tenho momentos, mas são curtos e irregulares',c:'E'},
+    {t:'Quase nunca — a resistência interna é muito forte',c:'M'}
+  ]},
+  {q:'Se alguém te pedisse para explicar seu projeto em 30 segundos, você conseguiria?',opts:[
+    {t:'Não — ainda não tenho isso claro',c:'C'},
+    {t:'Mais ou menos — a ideia existe, mas sem forma',c:'S'},
+    {t:'Sim, mas aí fico travada no que fazer com isso',c:'E'},
+    {t:'Sim, mas bate um desânimo quando penso nos próximos passos',c:'M'}
+  ]},
+  {q:'Quando você imagina o projeto funcionando, o que mais aparece?',opts:[
+    {t:'Uma imagem confusa — não consigo visualizar direito',c:'C'},
+    {t:'Uma visão bonita, mas sem saber como chegar lá',c:'S'},
+    {t:'Clareza do resultado, mas não da jornada',c:'E'},
+    {t:'Dúvida se realmente vai acontecer',c:'M'}
+  ]},
+  {q:'Como você se relaciona com prazos e comprometimentos?',opts:[
+    {t:'Evito colocar prazos porque não sei o que precisa acontecer',c:'C'},
+    {t:'Coloco prazos, mas eles mudam muito',c:'S'},
+    {t:'Coloco, mas não cumpro — e me culpo por isso',c:'E'},
+    {t:'Me estressa muito — prefiro nem colocar',c:'M'}
+  ]},
+  {q:'O que você faria AGORA se soubesse exatamente o que fazer?',opts:[
+    {t:'Definiria bem o projeto primeiro',c:'C'},
+    {t:'Montaria um plano detalhado',c:'S'},
+    {t:'Já começaria a executar sem hesitar',c:'E'},
+    {t:'Precisaria primeiro resolver minha relação com o projeto',c:'M'}
+  ]},
+  {q:'Qual é a sua maior fonte de energia quando toca nesse projeto?',opts:[
+    {t:'A possibilidade — quando imagino o impacto',c:'C'},
+    {t:'Quando vejo um caminho claro à frente',c:'S'},
+    {t:'Quando entro em flow e as coisas acontecem',c:'E'},
+    {t:'Quando alguém acredita em mim ou me apoia',c:'A'}
+  ]},
+  {q:'Como você reage quando mostra o projeto para alguém?',opts:[
+    {t:'Evito mostrar — ainda não está "pronto para mostrar"',c:'C'},
+    {t:'Mostro, mas fico esperando que me digam o que fazer',c:'S'},
+    {t:'Mostro e quero feedback de execução',c:'E'},
+    {t:'Fico muito vulnerável — preciso muito da validação',c:'M'}
+  ]},
+  {q:'Qual foi a última vez que você fez progresso real nesse projeto?',opts:[
+    {t:'Nunca realmente defini o que é "progresso"',c:'C'},
+    {t:'Há muito tempo — perdi o fio condutor',c:'S'},
+    {t:'Faz um tempo — tive um período bom, mas parei',c:'E'},
+    {t:'Quando estava me sentindo bem emocionalmente',c:'M'}
+  ]},
+  {q:'Se você tivesse que dar um passo ainda hoje, qual seria?',opts:[
+    {t:'Precisaria primeiro clarear o que quero de verdade',c:'C'},
+    {t:'Organizaria as ideias e montaria uma lista',c:'S'},
+    {t:'Abriria o projeto e executaria por 20 minutos',c:'E'},
+    {t:'Conversaria com alguém de confiança sobre o projeto',c:'A'}
+  ]},
+  {q:'Como é a sua relação com a incerteza?',opts:[
+    {t:'Me paralisa — preciso entender tudo antes de começar',c:'C'},
+    {t:'Me incomoda — prefiro ter um mapa antes de sair',c:'S'},
+    {t:'Consigo lidar, mas me frustra não ter resultados rápidos',c:'E'},
+    {t:'Me assusta — e isso me faz não começar',c:'M'}
+  ]},
+  {q:'Você tem alguém (amiga, parceiro, mentor) que acompanha esse projeto?',opts:[
+    {t:'Não — e não sei nem o que pedir para alguém',c:'C'},
+    {t:'Não muito — ainda não estruturei o suficiente para pedir ajuda',c:'S'},
+    {t:'Tenho, mas trabalho bem sozinha',c:'E'},
+    {t:'Sim — e sem esse apoio seria muito mais difícil',c:'A'}
+  ]},
+  {q:'O que você mais teme que aconteça com esse projeto?',opts:[
+    {t:'Que eu nunca descubra o que ele realmente é',c:'C'},
+    {t:'Que fique sendo uma boa ideia que nunca saiu do papel',c:'S'},
+    {t:'Que eu não consiga manter consistência suficiente',c:'E'},
+    {t:'Que eu não seja boa o suficiente para realizá-lo',c:'M'}
+  ]},
+  {q:'Quando você pensa nos próximos 3 meses, o que sente?',opts:[
+    {t:'Confusão — não tenho clareza do que quero construir',c:'C'},
+    {t:'Esperança, mas sem saber como estruturar',c:'S'},
+    {t:'Vontade — se eu conseguir manter o ritmo',c:'E'},
+    {t:'Ansiedade — medo de chegar lá no mesmo lugar',c:'M'}
+  ]},
+  {q:'O que melhor descreve sua relação com o sucesso nesse projeto?',opts:[
+    {t:'Ainda não defini o que seria sucesso',c:'C'},
+    {t:'Sei o que é, mas o caminho parece muito longo',c:'S'},
+    {t:'Acredito que vou chegar lá, mas preciso me mover',c:'E'},
+    {t:'Tenho medo de querer muito e ser decepcionada',c:'M'}
+  ]},
+  {q:'Como você prefere avançar em algo desafiador?',opts:[
+    {t:'Primeiro entendo tudo antes de agir',c:'C'},
+    {t:'Com um plano claro na mão',c:'S'},
+    {t:'Começo e ajusto no caminho',c:'E'},
+    {t:'Com alguém ao meu lado — sozinha trava muito',c:'A'}
+  ]}
+];
+
+const TEST_PROFILES={
+  C:{
+    name:'Navegante em Busca de Norte',
+    icon:'🧭',
+    sub:'Perfil · Clareza',
+    desc:'Seu projeto existe com força, mas ainda sem forma. Você tem energia e intenção — o que falta é definir com precisão o que você está construindo e para quem. A boa notícia: quando a clareza chega, pessoas como você avançam rápido.',
+    steps:[
+      'Escreva o projeto em uma frase direta, sem qualificar',
+      'Defina um resultado concreto para os próximos 30 dias',
+      'Identifique a pessoa que mais se beneficiaria com isso',
+      'Comece pela Semana 1 — o módulo foi feito para você'
+    ],
+    note:'A confusão não é sinal de que o projeto não existe. É sinal de que ele ainda não foi verbalizado com honestidade.'
+  },
+  S:{
+    name:'Estrategista sem Mapa',
+    icon:'🗺',
+    sub:'Perfil · Estrutura',
+    desc:'Você sabe onde quer chegar, mas a jornada é nebulosa. Sua mente quer um plano antes de se mover — e isso é uma força, não uma fraqueza. O problema é que sem estrutura, a energia vai para o lugar errado.',
+    steps:[
+      'Divida o projeto em 3 etapas grandes — só 3',
+      'Defina a menor ação possível para a primeira etapa',
+      'Coloque um prazo real (não ideal) para essa ação',
+      'Foque na Semana 2 — estratégia e plano de execução'
+    ],
+    note:'Um plano imperfeito que existe bate um plano perfeito que ainda está sendo pensado.'
+  },
+  E:{
+    name:'Motor Ligado, Freio Preso',
+    icon:'⚡',
+    sub:'Perfil · Execução',
+    desc:'Você sabe o que quer, tem um plano e ainda assim não age. Isso é o bloqueio de execução — e é o mais frustrante porque parece irracional. A chave não é mais motivação: é remover as fricções que impedem o primeiro movimento.',
+    steps:[
+      'Identifique a menor versão possível de uma ação (2 minutos)',
+      'Elimine decisões antes de começar — decida agora, aja depois',
+      'Use o Botão de Pânico sempre que sentir resistência',
+      'A Semana 3 (Execução Assistida) foi feita exatamente para você'
+    ],
+    note:'Você não precisa de motivação para começar. Você precisa começar para ter motivação.'
+  },
+  M:{
+    name:'Raízes que Precisam de Terra',
+    icon:'🌱',
+    sub:'Perfil · Emocional',
+    desc:'Seu maior obstáculo não é técnico — é interno. Medo, autocobrança, sensação de não ser suficiente. Essas raízes precisam de atenção antes (ou junto) com a execução. Você vai avançar quando aprender a avançar com o desconforto, não depois dele passar.',
+    steps:[
+      'Escreva, sem julgamento, qual é o pior que pode acontecer',
+      'Separe crítica do projeto de crítica à sua identidade',
+      'Encontre uma pessoa que pode testemunhar sua jornada',
+      'Comece pequeno — cada micro-avanço constrói a confiança'
+    ],
+    note:'Coragem não é a ausência de medo. É fazer mesmo com ele.'
+  },
+  A:{
+    name:'Voa Melhor em Parceria',
+    icon:'🤝',
+    sub:'Perfil · Accountability',
+    desc:'Você funciona melhor quando tem alguém ao lado. Isso não é dependência — é um estilo de trabalho legítimo. O problema é quando você espera o apoio para começar. A solução é estruturar o apoio como parte do processo, não como pré-requisito.',
+    steps:[
+      'Identifique uma pessoa que pode ser sua parceira de accountability',
+      'Combine check-ins semanais (15 min bastam)',
+      'Use o Tira Dúvidas para não acumular obstáculos',
+      'Veja as sessões semanais como seu espaço de responsabilidade'
+    ],
+    note:'Pedir apoio é estratégia, não fraqueza.'
+  }
+};
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+//  TEST ENGINE
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+let testCurrentQ=0,testAnswers=[],testSelectedOpt=null;
+
+function openTest(){
+  testCurrentQ=0;testAnswers=[];testSelectedOpt=null;
+  const ov=document.getElementById('testOverlay');
+  document.getElementById('testHead').style.display='';
+  document.getElementById('testBodyOptions').style.display='';
+  document.getElementById('testFoot').style.display='';
+  document.getElementById('testResult').classList.remove('on');
+  ov.classList.add('on');
+  renderTestQuestion();
+}
+
+function closeTest(){
+  document.getElementById('testOverlay').classList.remove('on');
+  loadHomeTestResult();
+}
+
+function retakeTest(){
+  testCurrentQ=0;testAnswers=[];testSelectedOpt=null;
+  document.getElementById('testResult').classList.remove('on');
+  document.getElementById('testHead').style.display='';
+  document.getElementById('testBodyOptions').style.display='';
+  document.getElementById('testFoot').style.display='';
+  renderTestQuestion();
+}
+
+function renderTestQuestion(){
+  const q=TEST_QUESTIONS[testCurrentQ];
+  const pct=Math.round((testCurrentQ/TEST_QUESTIONS.length)*100);
+  document.getElementById('testProgFill').style.width=pct+'%';
+  document.getElementById('testProgTxt').textContent=testCurrentQ+' / '+TEST_QUESTIONS.length;
+  document.getElementById('testQNum').textContent='Pergunta '+(testCurrentQ+1<10?'0'+(testCurrentQ+1):testCurrentQ+1);
+  document.getElementById('testQTxt').textContent=q.q;
+  const opts=document.getElementById('testOptions');
+  opts.innerHTML='';
+  const letters=['A','B','C','D'];
+  q.opts.forEach((o,i)=>{
+    const btn=document.createElement('button');
+    btn.className='test-opt';
+    btn.innerHTML=`<span class="test-opt-letter">${letters[i]}</span><span class="test-opt-txt">${o.t}</span>`;
+    btn.onclick=()=>selectTestOpt(i,o.c,btn);
+    opts.appendChild(btn);
+  });
+  testSelectedOpt=null;
+  document.getElementById('testNextBtn').disabled=true;
+  document.getElementById('testNavHint').textContent='Selecione uma opção para continuar';
+  // restore previous answer if back
+  if(testAnswers[testCurrentQ]!==undefined){
+    const prev=testAnswers[testCurrentQ];
+    opts.querySelectorAll('.test-opt')[prev.idx]?.classList.add('sel');
+    opts.querySelectorAll('.test-opt')[prev.idx]?.querySelector('.test-opt-letter')?.classList.add('sel');
+    testSelectedOpt=prev;
+    document.getElementById('testNextBtn').disabled=false;
+  }
+  document.getElementById('testNextBtn').textContent=testCurrentQ===TEST_QUESTIONS.length-1?'Ver resultado ✓':'Próxima →';
+}
+
+function selectTestOpt(idx,cat,btn){
+  document.querySelectorAll('.test-opt').forEach(b=>b.classList.remove('sel'));
+  btn.classList.add('sel');
+  testSelectedOpt={idx,cat};
+  document.getElementById('testNextBtn').disabled=false;
+  document.getElementById('testNavHint').textContent='';
+}
+
+function testNext(){
+  if(!testSelectedOpt)return;
+  testAnswers[testCurrentQ]=testSelectedOpt;
+  if(testCurrentQ<TEST_QUESTIONS.length-1){
+    testCurrentQ++;
+    renderTestQuestion();
+  } else {
+    finishTest();
+  }
+}
+
+function finishTest(){
+  // tally scores
+  const scores={C:0,S:0,E:0,M:0,A:0};
+  testAnswers.forEach(a=>{if(a&&a.cat)scores[a.cat]=(scores[a.cat]||0)+1;});
+  const winner=Object.entries(scores).sort((a,b)=>b[1]-a[1])[0][0];
+  const profile=TEST_PROFILES[winner];
+
+  // save to user data
+  if(currentEmail){
+    const users=getUsers();
+    const u=users[currentEmail];
+    if(u){
+      if(!u.data)u.data={};
+      if(!u.data.testResults)u.data.testResults=[];
+      u.data.testResults.push({
+        date:fmtDate(new Date()),
+        profileKey:winner,
+        profileName:profile.name,
+        scores,
+        answers:testAnswers.map((a,i)=>({q:TEST_QUESTIONS[i].q,answer:TEST_QUESTIONS[i].opts[a.idx]?.t,cat:a.cat}))
+      });
+      setUsers(users);
+    }
+  }
+
+  // show result
+  document.getElementById('testProgFill').style.width='100%';
+  document.getElementById('testProgTxt').textContent='20 / 20';
+  document.getElementById('testHead').style.display='none';
+  document.getElementById('testBodyOptions').style.display='none';
+  document.getElementById('testFoot').style.display='none';
+
+  document.getElementById('trIcon').textContent=profile.icon;
+  document.getElementById('trName').textContent=profile.name;
+  document.getElementById('trSub').textContent=profile.sub;
+  document.getElementById('trDesc').textContent=profile.desc;
+
+  let stepsHtml='<div class="tr-steps-title">Próximos passos recomendados</div>';
+  profile.steps.forEach((s,i)=>{
+    stepsHtml+=`<div class="tr-step"><div class="tr-step-num">${i+1<10?'0'+(i+1):i+1}</div><div class="tr-step-txt">${s}</div></div>`;
+  });
+  document.getElementById('trSteps').innerHTML=stepsHtml;
+  document.getElementById('trNote').textContent=profile.note;
+  document.getElementById('testResult').classList.add('on');
+}
+
+function loadHomeTestResult(){
+  if(!currentEmail)return;
+  const users=getUsers();
+  const u=users[currentEmail];
+  const results=u?.data?.testResults||[];
+  const card=document.getElementById('home-test-card');
+  const cta=document.getElementById('home-test-cta');
+  if(!results.length){
+    card.classList.remove('visible');
+    cta.style.display='';
+  } else {
+    const last=results[results.length-1];
+    card.classList.add('visible');
+    cta.style.display='none';
+    document.getElementById('trc-profile-name').textContent=last.profileName;
+    document.getElementById('trc-date').textContent=last.date;
+    const p=TEST_PROFILES[last.profileKey];
+    document.getElementById('trc-desc').textContent=p?p.desc.substring(0,160)+'...':'—';
+  }
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+//  CHAT / TIRA DÚVIDAS
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+function sendQuestion(){
+  const inp=document.getElementById('chat-inp');
+  const text=inp.value.trim();
+  if(!text){toast('⚠️','Escreva sua pergunta antes de enviar.');return;}
+  const users=getUsers();
+  const u=users[currentEmail];
+  if(!u)return;
+  if(!u.data)u.data={};
+  if(!u.data.messages)u.data.messages=[];
+  u.data.messages.push({
+    id:'msg_'+Date.now(),
+    date:fmtDate(new Date()),
+    question:text,
+    answer:null,
+    readByStudent:true,
+    readByAdmin:false
+  });
+  setUsers(users);
+  inp.value='';
+  loadChatMessages();
+  toast('📨','Pergunta enviada! Vou responder em breve.');
+}
+
+function loadChatMessages(){
+  if(!currentEmail)return;
+  const users=getUsers();
+  const u=users[currentEmail];
+  const msgs=u?.data?.messages||[];
+  const wrap=document.getElementById('chat-messages-wrap');
+  if(!msgs.length){
+    wrap.innerHTML='<div class="chat-empty">💬 Nenhuma mensagem ainda.<br>Pode perguntar qualquer coisa sobre o processo!</div>';
+    return;
+  }
+  let html='';
+  msgs.forEach(m=>{
+    html+=`<div class="chat-msg student">
+      <div class="chat-msg-meta">
+        <span class="chat-msg-who">Você</span>
+        <span class="chat-msg-date">${m.date}</span>
+      </div>
+      <div class="chat-msg-body">${escHtml(m.question)}</div>
+    </div>`;
+    if(m.answer){
+      html+=`<div class="chat-msg admin">
+        <div class="chat-msg-meta">
+          <span class="chat-msg-who">Coach</span>
+          <span class="chat-msg-date">${m.answerDate||''}</span>
+        </div>
+        <div class="chat-msg-body">${escHtml(m.answer)}</div>
+      </div>`;
+    } else {
+      html+=`<div class="chat-pending">⏳ Aguardando resposta do coach...</div>`;
+    }
+  });
+  wrap.innerHTML=html;
+  // scroll to bottom
+  wrap.scrollTop=wrap.scrollHeight;
+}
+
+function markChatRead(){
+  if(!currentEmail)return;
+  const users=getUsers();
+  const u=users[currentEmail];
+  if(!u||!u.data||!u.data.messages)return;
+  u.data.messages.forEach(m=>{m.readByStudent=true;});
+  setUsers(users);
+  updateChatBadge();
+}
+
+function updateChatBadge(){
+  if(!currentEmail)return;
+  const users=getUsers();
+  const u=users[currentEmail];
+  const msgs=u?.data?.messages||[];
+  const unread=msgs.filter(m=>m.answer&&!m.readByStudent).length;
+  const badge=document.getElementById('sb-chat-badge');
+  if(badge){
+    badge.textContent=unread||'!';
+    badge.style.display=unread>0?'':'none';
+  }
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+//  PANIC BUTTON
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+const PANIC_STEPS=[
+  {
+    title:'O que está travando você?',
+    sub:'Escolha o que mais se aproxima agora',
+    opts:[
+      {icon:'😶',txt:'Procrastinação — sei o que fazer, mas não consigo começar',key:'proc'},
+      {icon:'😰',txt:'Medo — fico paralisa de ansiedade ou insegurança',key:'fear'},
+      {icon:'😵',txt:'Confusão — não sei o que fazer nem por onde ir',key:'conf'},
+      {icon:'🌊',txt:'Overwhelm — tem coisa demais e me sinto afogando',key:'over'}
+    ]
+  },
+  {
+    title:'Em que etapa você está?',
+    sub:'Onde exatamente você parou?',
+    opts:[
+      {icon:'📝',txt:'Ainda não comecei — está só na cabeça',key:'notstart'},
+      {icon:'🏃',txt:'Comecei, mas travei no meio',key:'middle'},
+      {icon:'🎯',txt:'Estou perto do fim, mas não consigo terminar',key:'near'},
+      {icon:'🔄',txt:'Já terminei antes, mas travei de novo',key:'restart'}
+    ]
+  },
+  {
+    title:'Como você está se sentindo?',
+    sub:'Sendo honesta consigo mesma',
+    opts:[
+      {icon:'⚡',txt:'Ansiosa — energia alta, mas sem direção',key:'anx'},
+      {icon:'🪨',txt:'Sem energia — esgotada, difícil até pensar',key:'tired'},
+      {icon:'😤',txt:'Frustrada — com raiva de mim mesma',key:'anger'},
+      {icon:'🧊',txt:'Paralisada — como se o tempo parasse',key:'frozen'}
+    ]
+  }
+];
+
+const PANIC_EXERCISES={
+  // Exercícios baseados na combinação de respostas
+  default:{
+    icon:'🎯',title:'Reset de 5 Minutos',sub:'Desbloqueio · 5 min',
+    steps:[
+      'Feche tudo e coloque um timer de 5 minutos',
+      'Escreva à mão: "O que eu preciso fazer agora é..."',
+      'Não corrija. Escreva sem parar até o timer tocar',
+      'Leia o que escreveu e circule a menor ação possível',
+      'Faça só essa ação. Nada mais.'
+    ],
+    note:'O cérebro trava quando as opções são grandes demais. Começar pelo menor passo possível quebra o ciclo.'
+  },
+  proc:{
+    icon:'🔥',title:'O Exercício dos 2 Minutos',sub:'Anti-procrastinação · 2 min',
+    steps:[
+      'Identifique a menor versão possível da sua tarefa',
+      'Coloque um timer de 2 minutos',
+      'Abra o projeto e trabalhe apenas nesses 2 minutos',
+      'Quando tocar, você pode parar — ou continuar se quiser',
+      'O objetivo é começar, não terminar'
+    ],
+    note:'A procrastinação vive na antecipação. Duas minutos de ação destroem horas de resistência.'
+  },
+  fear:{
+    icon:'🌊',title:'A Carta do Pior Cenário',sub:'Desbloqueio emocional · 8 min',
+    steps:[
+      'Pegue papel e caneta — escreva à mão',
+      'Complete: "O pior que pode acontecer se eu avançar é..."',
+      'Agora escreva: "E se isso acontecer, eu sobreviveria porque..."',
+      'Complete: "O pior que pode acontecer se eu NÃO avançar é..."',
+      'Releia as duas listas. Qual risco é maior?'
+    ],
+    note:'O medo ganha força na escuridão. Colocá-lo no papel reduz sua potência pela metade.'
+  },
+  conf:{
+    icon:'🧩',title:'A Pergunta Única',sub:'Clarificação · 5 min',
+    steps:[
+      'Responda em uma frase: "O que eu realmente preciso decidir?"',
+      'Liste 3 opções possíveis — só 3, não mais',
+      'Para cada uma, escreva: "Se eu escolher isso, o próximo passo é..."',
+      'Escolha a opção com o próximo passo mais claro',
+      'Execute apenas o próximo passo — não o plano inteiro'
+    ],
+    note:'Confusão é excesso de opções. A clareza vem da redução, não da expansão.'
+  },
+  over:{
+    icon:'📋',title:'O Dump de 3 Listas',sub:'Anti-overwhelm · 10 min',
+    steps:[
+      'Pegue papel e divida em 3 colunas',
+      'Coluna 1: "Tudo que está na minha cabeça" — despeje tudo',
+      'Coluna 2: "O que pode esperar mais de 1 semana" — mova da coluna 1',
+      'Coluna 3: "O que precisa acontecer hoje" — no máximo 3 itens',
+      'Feche tudo e trabalhe apenas no primeiro item da coluna 3'
+    ],
+    note:'Overwhelm é uma ilusão criada quando tratamos 50 coisas como urgentes. Nada é urgente — só 1-3 coisas são.'
+  },
+  tired:{
+    icon:'🌿',title:'O Reset Corporal',sub:'Restauração · 7 min',
+    steps:[
+      'Pare tudo. Levante da cadeira agora',
+      'Beba um copo d\'água devagar, conscientemente',
+      'Faça 5 respirações: inspire 4 tempos, segure 2, expire 6',
+      'Escreva 1 coisa pequena que você consegue fazer nos próximos 15 minutos',
+      'Faça só essa coisa. Com esgotamento, quantidade é inimiga'
+    ],
+    note:'Com o corpo esgotado, a mente não funciona. Cuidar do corpo não é perda de tempo — é pré-requisito.'
+  }
+};
+
+let panicStep=0,panicAnswers=[];
+
+function openPanic(){
+  panicStep=0;panicAnswers=[];
+  document.getElementById('panic-exercise').classList.remove('on');
+  document.getElementById('panic-exercise').style.display='none';
+  document.getElementById('panic-questions').style.display='';
+  document.getElementById('panicOverlay').classList.add('on');
+  renderPanicStep();
+}
+
+function closePanic(){
+  document.getElementById('panicOverlay').classList.remove('on');
+}
+
+function resetPanic(){
+  panicStep=0;panicAnswers=[];
+  document.getElementById('panic-exercise').classList.remove('on');
+  document.getElementById('panic-exercise').style.display='none';
+  document.getElementById('panic-questions').style.display='';
+  renderPanicStep();
+}
+
+function renderPanicStep(){
+  const step=PANIC_STEPS[panicStep];
+  // update dots
+  for(let i=1;i<=3;i++){
+    const dot=document.getElementById('pd'+i);
+    if(i-1<panicStep)dot.className='panic-step-dot done';
+    else if(i-1===panicStep)dot.className='panic-step-dot on';
+    else dot.className='panic-step-dot';
+  }
+  document.getElementById('panic-q-title').textContent=step.title;
+  document.getElementById('panic-q-sub').textContent=step.sub;
+  const opts=document.getElementById('panic-opts');
+  opts.innerHTML='';
+  step.opts.forEach((o,i)=>{
+    const btn=document.createElement('button');
+    btn.className='panic-opt';
+    btn.innerHTML=`<span class="panic-opt-icon">${o.icon}</span><span>${o.txt}</span>`;
+    btn.onclick=()=>{
+      opts.querySelectorAll('.panic-opt').forEach(b=>b.classList.remove('sel'));
+      btn.classList.add('sel');
+      panicAnswers[panicStep]={idx:i,key:o.key};
+      document.getElementById('panic-next-btn').disabled=false;
+    };
+    opts.appendChild(btn);
+  });
+  document.getElementById('panic-next-btn').disabled=true;
+  document.getElementById('panic-next-btn').textContent=panicStep===2?'Ver exercício 🎯':'Continuar →';
+}
+
+function panicNext(){
+  if(!panicAnswers[panicStep])return;
+  if(panicStep<2){
+    panicStep++;
+    renderPanicStep();
+  } else {
+    showPanicExercise();
+  }
+}
+
+function showPanicExercise(){
+  const primaryKey=panicAnswers[0]?.key;
+  const energy=panicAnswers[2]?.key;
+  // pick exercise: prioritize energy if tired
+  let ex=PANIC_EXERCISES[energy==='tired'?'tired':(primaryKey||'default')]||PANIC_EXERCISES.default;
+  if(!PANIC_EXERCISES[primaryKey]&&!PANIC_EXERCISES[energy])ex=PANIC_EXERCISES.default;
+
+  document.getElementById('panic-questions').style.display='none';
+  const exDiv=document.getElementById('panic-exercise');
+  exDiv.style.display='block';
+  exDiv.classList.add('on');
+  document.getElementById('pe-icon').textContent=ex.icon;
+  document.getElementById('pe-title').textContent=ex.title;
+  document.getElementById('pe-subtitle').textContent=ex.sub;
+  let stepsHtml='';
+  ex.steps.forEach((s,i)=>{
+    stepsHtml+=`<div class="pe-step"><div class="pe-step-num">0${i+1}</div><div class="pe-step-txt">${s}</div></div>`;
+  });
+  document.getElementById('pe-steps').innerHTML=stepsHtml;
+  document.getElementById('pe-note').textContent=ex.note;
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+//  ADMIN
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+let admCurrentStudent=null;
+
+function startAdmin(){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('on'));
+  document.getElementById('scAdm').classList.add('on');
+  document.getElementById('panicBtn').style.display='none';
+  renderAdmin();
+  updateAdminMsgBadge();
+}
+
+function admPage(id,el){
+  document.querySelectorAll('.adm-page').forEach(p=>p.classList.remove('on'));
+  document.getElementById('adm-'+id).classList.add('on');
+  document.querySelectorAll('.adm-link').forEach(n=>n.classList.remove('on'));
+  if(el)el.classList.add('on');
+  document.getElementById('adm-ttl').textContent=
+    id==='dashboard'?'Dashboard':id==='students'?'Alunos':id==='messages'?'Mensagens':'Detalhe do Aluno';
+  document.getElementById('btnDelStudent').style.display='none';
+  if(id==='dashboard'||id==='students')renderAdmin();
+  if(id==='messages')renderAdminMessages();
+}
+
+function renderAdmin(){
+  const users=getUsers();
+  const list=Object.entries(users).filter(([e])=>e!==ADMIN_EMAIL);
+  document.getElementById('st-total').textContent=list.length;
+  let active=0,totalProg=0,doneSessions=0,totalTests=0,pendingMsgs=0;
+  list.forEach(([,u])=>{
+    const{global,weekPcts}=calcProgress(u.data||{});
+    if(global>0)active++;
+    totalProg+=global;
+    Object.values(weekPcts).forEach(p=>{if(p===100)doneSessions++;});
+    totalTests+=(u.data?.testResults||[]).length;
+    (u.data?.messages||[]).forEach(m=>{if(!m.readByAdmin)pendingMsgs++;});
+  });
+  document.getElementById('st-active').textContent=active;
+  document.getElementById('st-avg').textContent=list.length?Math.round(totalProg/list.length)+'%':'0%';
+  document.getElementById('st-done').textContent=doneSessions;
+  document.getElementById('st-tests').textContent=totalTests;
+  document.getElementById('st-msgs').textContent=pendingMsgs;
+
+  const html=buildStudentTable(list);
+  document.getElementById('adm-table-wrap').innerHTML=html;
+  const wrap2=document.getElementById('adm-table-wrap2');
+  if(wrap2)wrap2.innerHTML=html;
+}
+
+function buildStudentTable(list){
+  if(!list.length)return '<div class="no-students"><div class="ns-icon">👥</div><p>Nenhum aluno cadastrado ainda.</p></div>';
+  let html=`<table class="stu-table"><thead><tr><th>Nome</th><th>E-mail</th><th>Cadastro</th><th>Diagnóstico</th><th>Progresso</th><th></th></tr></thead><tbody>`;
+  list.forEach(([email,u])=>{
+    const{global}=calcProgress(u.data||{});
+    const testCount=(u.data?.testResults||[]).length;
+    const lastTest=testCount?u.data.testResults[testCount-1]:null;
+    const testChip=lastTest
+      ?`<span style="font-size:11px;color:var(--gold);background:var(--goldbg);border:1px solid var(--goldbr);padding:2px 8px;border-radius:4px;">${lastTest.profileName.split(' ').slice(0,2).join(' ')}</span>`
+      :`<span style="font-size:11px;color:var(--tx3);">Não feito</span>`;
+    html+=`<tr>
+      <td>${u.name}</td>
+      <td style="color:var(--tx3);font-size:12.5px">${email}</td>
+      <td style="color:var(--tx3);font-size:12.5px">${u.createdAt||'—'}</td>
+      <td>${testChip}</td>
+      <td><div class="prog-chip"><div class="prog-mini"><div class="prog-mini-fill" style="width:${global}%"></div></div> <span style="color:var(--gold)">${global}%</span></div></td>
+      <td><button class="btn-view" onclick="viewStudent('${email}')">Ver detalhes</button></td>
+    </tr>`;
+  });
+  html+=`</tbody></table>`;
+  return html;
+}
+
+function renderAdminMessages(){
+  const users=getUsers();
+  const list=Object.entries(users).filter(([e])=>e!==ADMIN_EMAIL);
+  const wrap=document.getElementById('adm-msgs-wrap');
+  let allMsgs=[];
+  list.forEach(([email,u])=>{
+    (u.data?.messages||[]).forEach(m=>{
+      allMsgs.push({...m,email,name:u.name});
+    });
+  });
+  allMsgs.sort((a,b)=>a.readByAdmin===b.readByAdmin?0:a.readByAdmin?1:-1);
+  if(!allMsgs.length){
+    wrap.innerHTML='<div class="adm-msgs-empty">💬 Nenhuma mensagem ainda.</div>';
+    return;
+  }
+  let html='<div class="adm-msg-list">';
+  allMsgs.forEach(m=>{
+    const unread=!m.readByAdmin;
+    html+=`<div class="adm-msg-item${unread?' unread':''}">
+      <div class="ami-header">
+        <div>
+          <div class="ami-who">${m.name}</div>
+          <div class="ami-email">${m.email}</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;">
+          ${unread?'<span class="ami-unread-badge">NOVA</span>':''}
+          <div class="ami-date">${m.date}</div>
+        </div>
+      </div>
+      <div class="ami-question">${escHtml(m.question)}</div>`;
+    if(m.answer){
+      html+=`<div class="ami-reply"><div class="ami-reply-label">Sua resposta</div>${escHtml(m.answer)}</div>`;
+    }
+    html+=`<div>
+        <div class="ami-reply-label">${m.answer?'Editar resposta':'Responder'}</div>
+        <textarea class="ami-reply-inp" id="reply_${m.id}" placeholder="Digite sua resposta...">${m.answer?escHtml(m.answer):''}</textarea>
+        <div class="ami-actions">
+          <button class="btn btn-gold" onclick="sendAdminReply('${m.email}','${m.id}')">📨 Enviar resposta</button>
+        </div>
+      </div>
+    </div>`;
+  });
+  html+='</div>';
+  wrap.innerHTML=html;
+}
+
+function sendAdminReply(email,msgId){
+  const inp=document.getElementById('reply_'+msgId);
+  if(!inp||!inp.value.trim()){toast('⚠️','Escreva a resposta antes de enviar.');return;}
+  const users=getUsers();
+  const u=users[email];
+  if(!u||!u.data||!u.data.messages)return;
+  const msg=u.data.messages.find(m=>m.id===msgId);
+  if(!msg)return;
+  msg.answer=inp.value.trim();
+  msg.answerDate=fmtDate(new Date());
+  msg.readByAdmin=true;
+  msg.readByStudent=false; // student hasn't read it yet
+  setUsers(users);
+  toast('✅','Resposta enviada!');
+  updateAdminMsgBadge();
+  renderAdminMessages();
+}
+
+function updateAdminMsgBadge(){
+  const users=getUsers();
+  const list=Object.entries(users).filter(([e])=>e!==ADMIN_EMAIL);
+  let pending=0;
+  list.forEach(([,u])=>{
+    (u.data?.messages||[]).forEach(m=>{if(!m.readByAdmin)pending++;});
+  });
+  const badge=document.getElementById('adm-msg-badge');
+  if(badge){
+    badge.textContent=pending;
+    badge.style.display=pending>0?'':'none';
+  }
+}
+
+function viewStudent(email){
+  const users=getUsers();
+  const u=users[email];
+  if(!u)return;
+  admCurrentStudent=email;
+  document.querySelectorAll('.adm-page').forEach(p=>p.classList.remove('on'));
+  document.getElementById('adm-student-detail').classList.add('on');
+  document.getElementById('adm-ttl').textContent='Detalhe do Aluno';
+  document.getElementById('btnDelStudent').style.display='';
+  document.getElementById('det-name').textContent=u.name;
+  document.getElementById('det-email').textContent=email;
+  const{global}=calcProgress(u.data||{});
+  document.getElementById('det-prog').textContent=global+'%';
+  const tabsEl=document.getElementById('det-tabs');
+  const weeks=['overview','w1','w2','w3','w4','map','reflection','test'];
+  tabsEl.innerHTML=weeks.map((w,i)=>`<button class="week-tab${i===0?' on':''}" onclick="showDetWeek('${w}',this)">${SESS_LABELS[w]||w}</button>`).join('');
+  showDetWeek('overview',tabsEl.querySelector('.week-tab'));
+}
+
+function showDetWeek(week,el){
+  document.querySelectorAll('.week-tab').forEach(t=>t.classList.remove('on'));
+  if(el)el.classList.add('on');
+  const users=getUsers();
+  const u=users[admCurrentStudent];
+  if(!u)return;
+  const sdata=(u.data||{})[week]||{};
+  const savedAt=(u.data||{})[week+'_ts'];
+  let html='';
+
+  if(week==='test'){
+    const results=u.data?.testResults||[];
+    if(!results.length){
+      html='<div class="ans-empty">Aluno ainda não fez o diagnóstico.</div>';
+    } else {
+      results.forEach((r,i)=>{
+        const p=TEST_PROFILES[r.profileKey];
+        html+=`<div class="ans-block">
+          <div class="ans-q">Diagnóstico ${i+1} — ${r.date}</div>
+          <div class="ans-txt" style="padding:14px 16px;">
+            <div style="font-size:20px;margin-bottom:8px;">${p?.icon||''} <strong>${r.profileName}</strong></div>
+            <div style="font-size:13px;color:var(--tx3);margin-bottom:10px;">${p?.sub||''}</div>
+            <div style="font-size:13.5px;color:var(--tx2);line-height:1.6;margin-bottom:12px;">${p?.desc||''}</div>
+            <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--tx3);margin-bottom:8px;">Distribuição de respostas</div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;">
+              ${Object.entries(r.scores).map(([k,v])=>`<span style="font-size:12px;background:var(--card);border:1px solid var(--b2);padding:3px 10px;border-radius:4px;">${k}: ${v}</span>`).join('')}
+            </div>
+          </div>
+        </div>`;
+        // individual answers
+        if(r.answers){
+          html+=`<details style="margin-bottom:16px;"><summary style="cursor:pointer;font-size:12px;color:var(--tx3);padding:8px 14px;background:var(--card);border:1px solid var(--b1);border-radius:var(--r2);">Ver respostas individuais</summary><div style="margin-top:8px;">`;
+          r.answers.forEach((a,qi)=>{
+            html+=`<div class="ans-block">
+              <div class="ans-q">P${qi+1}: ${escHtml(a.q||'')}</div>
+              <div class="ans-txt">${escHtml(a.answer||'—')} <span style="font-size:10px;color:var(--tx3);font-family:'JetBrains Mono',monospace;">[${a.cat||'?'}]</span></div>
+            </div>`;
+          });
+          html+=`</div></details>`;
+        }
+      });
+    }
+  } else if(week==='overview'){
+    const weeks2=['w1','w2','w3','w4','map','reflection'];
+    const{weekPcts}=calcProgress(u.data||{});
+    html=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px;">`;
+    weeks2.forEach(w=>{
+      const pct=weekPcts[w]||0;
+      html+=`<div style="background:var(--card);border:1px solid var(--b1);border-radius:var(--r);padding:14px 16px;">
+        <div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--tx3);margin-bottom:8px;">${SESS_LABELS[w]}</div>
+        <div style="font-size:24px;font-weight:700;color:${pct===100?'var(--green)':pct>0?'var(--gold)':'var(--tx3)'};">${pct}%</div>
+        <div style="height:3px;background:var(--b2);border-radius:2px;overflow:hidden;margin-top:8px;">
+          <div style="height:100%;width:${pct}%;background:${pct===100?'var(--green)':'var(--gold)'}"></div>
+        </div>
+      </div>`;
+    });
+    html+='</div>';
+    // test summary
+    const testResults=u.data?.testResults||[];
+    if(testResults.length){
+      const last=testResults[testResults.length-1];
+      const p=TEST_PROFILES[last.profileKey];
+      html+=`<div style="background:var(--goldbg);border:1px solid var(--goldbr);border-radius:var(--r);padding:16px 18px;margin-bottom:12px;">
+        <div style="font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--gold);margin-bottom:6px;">Último Diagnóstico — ${last.date}</div>
+        <div style="font-size:18px;font-weight:700;color:var(--gold);">${p?.icon||''} ${last.profileName}</div>
+      </div>`;
+    }
+  } else {
+    const fields=SESS_FIELDS[week]||[];
+    if(savedAt)html+=`<p style="font-size:12px;color:var(--tx3);margin-bottom:16px;font-family:'JetBrains Mono',monospace">Salvo em ${savedAt}</p>`;
+    if(!fields.length){html='<div class="ans-empty">Sem campos para esta seção.</div>';}
+    else{
+      fields.forEach(id=>{
+        const val=(sdata[id]||'').trim();
+        const label=Q_LABELS[id]||id;
+        html+=`<div class="ans-block"><div class="ans-q">${label}</div>`;
+        if(val)html+=`<div class="ans-txt">${escHtml(val)}</div>`;
+        else html+=`<div class="ans-empty">Não respondido</div>`;
+        html+=`</div>`;
+      });
+    }
+  }
+  document.getElementById('det-content').innerHTML=html;
+}
+
+function confirmDeleteStudent(){
+  if(!admCurrentStudent)return;
+  const users=getUsers();
+  const name=users[admCurrentStudent]?.name||admCurrentStudent;
+  openModal('Remover aluno?',`O aluno "${name}" e todos os seus dados serão removidos permanentemente.`,()=>{
+    const u=getUsers();
+    delete u[admCurrentStudent];
+    setUsers(u);
+    admCurrentStudent=null;
+    document.getElementById('btnDelStudent').style.display='none';
+    admPage('dashboard',document.querySelector('.adm-link'));
+    toast('🗑','Aluno removido.');
+  });
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+//  MODAL
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+let _modalCb=null;
+function openModal(h,d,cb){
+  document.getElementById('modal-h').textContent=h;
+  document.getElementById('modal-d').textContent=d;
+  _modalCb=cb;
+  document.getElementById('modalOv').classList.add('on');
+}
+function closeModal(){document.getElementById('modalOv').classList.remove('on');_modalCb=null;}
+function modalConfirm(){closeModal();if(_modalCb)_modalCb();}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+//  TOAST
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+let _tt;
+function toast(icon,msg){
+  document.getElementById('t-icon').textContent=icon;
+  document.getElementById('t-msg').textContent=msg;
+  const el=document.getElementById('toast');
+  el.classList.add('on');
+  clearTimeout(_tt);
+  _tt=setTimeout(()=>el.classList.remove('on'),2800);
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+//  UTILITIES
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+function fmtDate(d){
+  return d.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit',year:'numeric'})+' '+d.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+}
+function escHtml(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');}
+function doLogout(){
+  clearSession();
+  currentEmail='';currentName='';
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('on'));
+  document.getElementById('scAuth').classList.add('on');
+  document.getElementById('panicBtn').style.display='none';
+  // reset forms
+  ['li-email','li-pass'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  document.getElementById('li-msg').textContent='';
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+//  INIT
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+document.addEventListener('DOMContentLoaded',()=>{
+  // apply saved theme
+  applyTheme(getTheme());
+
+  // resume session
+  const s=session();
+  if(s){
+    if(s.role==='admin'){startAdmin();}
+    else{startStudent(s.email,s.name);}
+  }
+
+  // enter key auth
+  document.getElementById('li-pass')?.addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
+  document.getElementById('rg-pass2')?.addEventListener('keydown',e=>{if(e.key==='Enter')doRegister();});
+  document.getElementById('fp-answer')?.addEventListener('keydown',e=>{if(e.key==='Enter')forgotStep2();});
+
+  // close overlays on backdrop
+  document.getElementById('modalOv').addEventListener('click',function(e){if(e.target===this)closeModal();});
+  document.getElementById('testOverlay').addEventListener('click',function(e){if(e.target===this)closeTest();});
+  document.getElementById('panicOverlay').addEventListener('click',function(e){if(e.target===this)closePanic();});
+
+  // progress on input
+  document.querySelectorAll('textarea,input').forEach(el=>el.addEventListener('input',()=>{}));
+});
+</script>
+</body>
+</html>
